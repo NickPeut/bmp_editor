@@ -1,0 +1,3 @@
+/home/nuka/CLionProjects/CourseCpp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/nuka/CLionProjects/CourseCpp/cmake-build-debug/CMakeFiles/CourseCpp.dir
+/home/nuka/CLionProjects/CourseCpp/cmake-build-debug/CMakeFiles/edit_cache.dir

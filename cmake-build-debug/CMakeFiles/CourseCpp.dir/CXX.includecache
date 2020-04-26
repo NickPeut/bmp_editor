@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/nuka/CLionProjects/CourseCpp/bmp.h
+iostream
+-
+cstring
+-
+
+/home/nuka/CLionProjects/CourseCpp/main.cpp
+bmp.h
+/home/nuka/CLionProjects/CourseCpp/bmp.h
+
