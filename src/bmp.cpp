@@ -20,11 +20,11 @@ void Bitmap:: scanSize(std::ifstream &file) {
 }
 
 int Bitmap:: initPixelArray() {
-    picture = (Pixel**)malloc(height * sizeof(Pixel*));
+    picture = new Pixel* [height];//(Pixel**)malloc(height * sizeof(Pixel*));
     if (picture == nullptr)
         return 1;
 
-    picture[0] = (Pixel*)malloc(widthBytes * height);
+    picture[0] = new Pixel [widthBytes* height];//(Pixel*)malloc(widthBytes * height);
     memset(picture[0], 0, widthBytes * height);
 
     if (picture[0] == nullptr)

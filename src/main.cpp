@@ -6,7 +6,6 @@
 int main(int argc, char *argv[]) {
     std::ifstream file(argv[2], std::ifstream::binary);
     if (!file.is_open()) {
-        //TODO
         //error("Can't open input file");
         return 1;
     }
