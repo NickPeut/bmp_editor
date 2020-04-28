@@ -1,29 +1,25 @@
+#include <fstream>
 #include "bmp.h"
 
 size_t Bitmap::normalizeTo4(size_t x) {
     return (x + 3) / 4 * 4;
 }
 
-void Bitmap:: scanHeader(FILE *file)
-{
-    fseek(file, 0, SEEK_SET);
-    fread(&header, HEADER_SIZE, 1, file);
+void Bitmap:: scanHeader(std::ifstream &file) {
+    std::cout << file.tellg() << " " << sizeof(header) << std::endl;
+    file.read((char*)(&header), HEADER_SIZE);
 }
 
-void Bitmap:: scanSize(FILE *file)
-{
-    fseek(file, WIDTH_POSITION, SEEK_SET);
+void Bitmap:: scanSize(std::ifstream &file) {
 
     width = height = 0;
-
-    fread(&width, WIDTH_BYTES_SIZE, 1, file);
-    fread(&height, HEIGHT_BYTES_SIZE, 1, file);
-
+    widthBytes = 0;
+    memcpy(&width, header.biWidth, WIDTH_BYTES_SIZE);
+    memcpy(&height, header.biHeight, HEIGHT_BYTES_SIZE);
     widthBytes = normalizeTo4(width * PIXEL_SIZE);
 }
 
-int Bitmap:: initPixelArray()
-{
+int Bitmap:: initPixelArray() {
     picture = (Pixel**)malloc(height * sizeof(Pixel*));
     if (picture == nullptr)
         return 1;
@@ -44,8 +40,7 @@ int Bitmap:: initPixelArray()
     return 0;
 }
 
-void Bitmap:: reverse()
-{
+void Bitmap:: reverse() {
     for (size_t i = 0; i * 2 < height; i++)
     {
         for (size_t j = 0; j < width; j++)
@@ -57,46 +52,32 @@ void Bitmap:: reverse()
     }
 }
 
-
-void Bitmap:: scanPicture(FILE *file)
-{
-    fseek(file, sizeof(header), SEEK_SET);
-    fread(&picture[0][0], 1, widthBytes * height, file);
+void Bitmap:: scanPicture(std::ifstream &file) {
+    file.read((char*)(&picture[0][0]), widthBytes * height);// widthBytes * height -> 1
     reverse();
 }
 
-
-
-void Bitmap:: printHeader(FILE *file)
-{
-    fwrite(&header, HEADER_SIZE, 1, file);
+void Bitmap:: printHeader(std::ofstream &file) {
+    file.write((char*)(&header), HEADER_SIZE); //HEADER_SIZE -> 1
 }
 
-void Bitmap:: printPicture(FILE *file)
-{
-    fseek(file, sizeof(header), SEEK_SET);
-
+void Bitmap:: printPicture(std::ofstream &file) {
     reverse();
-
-    fwrite(&picture[0][0], height * widthBytes, 1, file);
-
+    file.write((char*)(&picture[0][0]), height * widthBytes); //height * widthBytes -> 1
     reverse();
 }
 
-void Bitmap:: saveBitmap(FILE *file)
-{
+void Bitmap:: saveBitmap(std::ofstream &file) {
     printHeader(file);
     printPicture(file);
 }
 
-void Bitmap:: clearBitmap()
-{
+void Bitmap:: clearBitmap() {
     free(picture[0]);
     free(picture);
 }
 
-int Bitmap:: readBitmap(FILE *file)
-{
+int Bitmap:: readBitmap(std::ifstream &file) {
     scanHeader(file);
     scanSize(file);
     if (initPixelArray() != 0)
@@ -107,29 +88,16 @@ int Bitmap:: readBitmap(FILE *file)
     return 0;
 }
 
-int Bitmap:: getBitmapFromFile( fileName)
-{
-    FILE *file = fopen(fileName, "rb");
-
-    if (file == nullptr) {
-    //TODO
-        //error("Can't open input file");
-        return 1;
-    }
-
-    if (readBitmap(file) != 0)
-    {
-        fclose(file);
+int Bitmap:: getBitmapFromFile(std::ifstream &file) {
+    if (readBitmap(file) != 0) {
         //error("Memory allocation failed");
         return 7;
     }
-
-    fclose(file);
     return 0;
 }
 
-Bitmap::Bitmap(const std::string &fileName) {
-
+Bitmap::Bitmap(std::ifstream &file) {
+    getBitmapFromFile(file);
 }
 
 

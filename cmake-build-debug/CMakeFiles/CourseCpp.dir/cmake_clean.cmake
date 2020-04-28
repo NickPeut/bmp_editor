@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/CourseCpp.dir/bmp.cpp.o"
-  "CMakeFiles/CourseCpp.dir/main.cpp.o"
+  "CMakeFiles/CourseCpp.dir/src/bmp.cpp.o"
+  "CMakeFiles/CourseCpp.dir/src/main.cpp.o"
   "CourseCpp"
   "CourseCpp.pdb"
 )

@@ -6,13 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/home/nuka/CLionProjects/CourseCpp/bmp.h
+../include/bmp.h
 iostream
 -
 cstring
 -
+vector
+-
 
-/home/nuka/CLionProjects/CourseCpp/main.cpp
+/home/nuka/CLionProjects/CourseCpp/src/bmp.cpp
+fstream
+-
 bmp.h
-/home/nuka/CLionProjects/CourseCpp/bmp.h
+/home/nuka/CLionProjects/CourseCpp/src/bmp.h
 

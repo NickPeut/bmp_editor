@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/CourseCpp.dir/main.cpp.o CMakeFiles/CourseCpp.dir/bmp.cpp.o  -o CourseCpp 
+/usr/bin/c++  -g   CMakeFiles/CourseCpp.dir/src/main.cpp.o CMakeFiles/CourseCpp.dir/src/bmp.cpp.o  -o CourseCpp 
