@@ -16,6 +16,6 @@ int main(int argc, char *argv[]) {
     bitmap.saveBitmap(result);
     result.close();
 
- //   bitmap.clearBitmap();
+    bitmap.clearBitmap();
     return 0;
 }

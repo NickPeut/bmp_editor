@@ -20,3 +20,9 @@ fstream
 bmp.h
 /home/nuka/CLionProjects/CourseCpp/src/bmp.h
 
+/home/nuka/CLionProjects/CourseCpp/src/main.cpp
+fstream
+-
+bmp.h
+/home/nuka/CLionProjects/CourseCpp/src/bmp.h
+
