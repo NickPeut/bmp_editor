@@ -177,6 +177,33 @@ src/main.cpp.s:
 	$(MAKE) -f CMakeFiles/CourseCpp.dir/build.make CMakeFiles/CourseCpp.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/processings_bmp.o: src/processings_bmp.cpp.o
+
+.PHONY : src/processings_bmp.o
+
+# target to build an object file
+src/processings_bmp.cpp.o:
+	$(MAKE) -f CMakeFiles/CourseCpp.dir/build.make CMakeFiles/CourseCpp.dir/src/processings_bmp.cpp.o
+.PHONY : src/processings_bmp.cpp.o
+
+src/processings_bmp.i: src/processings_bmp.cpp.i
+
+.PHONY : src/processings_bmp.i
+
+# target to preprocess a source file
+src/processings_bmp.cpp.i:
+	$(MAKE) -f CMakeFiles/CourseCpp.dir/build.make CMakeFiles/CourseCpp.dir/src/processings_bmp.cpp.i
+.PHONY : src/processings_bmp.cpp.i
+
+src/processings_bmp.s: src/processings_bmp.cpp.s
+
+.PHONY : src/processings_bmp.s
+
+# target to generate assembly for a file
+src/processings_bmp.cpp.s:
+	$(MAKE) -f CMakeFiles/CourseCpp.dir/build.make CMakeFiles/CourseCpp.dir/src/processings_bmp.cpp.s
+.PHONY : src/processings_bmp.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -192,6 +219,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/processings_bmp.o"
+	@echo "... src/processings_bmp.i"
+	@echo "... src/processings_bmp.s"
 .PHONY : help
 
 

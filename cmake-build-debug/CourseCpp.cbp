@@ -89,10 +89,16 @@
 		<Unit filename="/home/nuka/CLionProjects/CourseCpp/include/bmp.h">
 			<Option target="CourseCpp"/>
 		</Unit>
+		<Unit filename="/home/nuka/CLionProjects/CourseCpp/include/processings_bmp.h">
+			<Option target="CourseCpp"/>
+		</Unit>
 		<Unit filename="/home/nuka/CLionProjects/CourseCpp/src/bmp.cpp">
 			<Option target="CourseCpp"/>
 		</Unit>
 		<Unit filename="/home/nuka/CLionProjects/CourseCpp/src/main.cpp">
+			<Option target="CourseCpp"/>
+		</Unit>
+		<Unit filename="/home/nuka/CLionProjects/CourseCpp/src/processings_bmp.cpp">
 			<Option target="CourseCpp"/>
 		</Unit>
 		<Unit filename="/home/nuka/CLionProjects/CourseCpp/CMakeLists.txt">

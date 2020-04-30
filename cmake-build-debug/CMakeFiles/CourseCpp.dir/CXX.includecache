@@ -13,6 +13,14 @@ cstring
 -
 vector
 -
+fstream
+-
+processings_bmp.h
+../include/processings_bmp.h
+
+../include/processings_bmp.h
+fstream
+-
 
 /home/nuka/CLionProjects/CourseCpp/src/bmp.cpp
 fstream
@@ -21,8 +29,18 @@ bmp.h
 /home/nuka/CLionProjects/CourseCpp/src/bmp.h
 
 /home/nuka/CLionProjects/CourseCpp/src/main.cpp
-fstream
+regex.h
 -
+getopt.h
+-
+bmp.h
+/home/nuka/CLionProjects/CourseCpp/src/bmp.h
+processings_bmp.h
+/home/nuka/CLionProjects/CourseCpp/src/processings_bmp.h
+
+/home/nuka/CLionProjects/CourseCpp/src/processings_bmp.cpp
+processings_bmp.h
+/home/nuka/CLionProjects/CourseCpp/src/processings_bmp.h
 bmp.h
 /home/nuka/CLionProjects/CourseCpp/src/bmp.h
 

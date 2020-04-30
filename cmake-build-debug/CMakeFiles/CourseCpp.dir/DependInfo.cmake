@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/nuka/CLionProjects/CourseCpp/src/bmp.cpp" "/home/nuka/CLionProjects/CourseCpp/cmake-build-debug/CMakeFiles/CourseCpp.dir/src/bmp.cpp.o"
   "/home/nuka/CLionProjects/CourseCpp/src/main.cpp" "/home/nuka/CLionProjects/CourseCpp/cmake-build-debug/CMakeFiles/CourseCpp.dir/src/main.cpp.o"
+  "/home/nuka/CLionProjects/CourseCpp/src/processings_bmp.cpp" "/home/nuka/CLionProjects/CourseCpp/cmake-build-debug/CMakeFiles/CourseCpp.dir/src/processings_bmp.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

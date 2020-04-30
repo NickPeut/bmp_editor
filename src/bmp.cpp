@@ -8,26 +8,29 @@ size_t Bitmap::normalizeTo4(size_t x) {
 int Bitmap:: scanHeader(std::ifstream &file) {
     try {
         if (isCorrect(file)) {
-            file.read((char *) (&header), HEADER_SIZE);
             return 0;
         }
         else
-            throw std::logic_error("don't supported file format");
+            throw std::logic_error("not supported file format");
     }
     catch (std::logic_error* err) {
         std::cout << err;
         return 1;
     }
-    file.read((char *) (&header), HEADER_SIZE);
+
+
+    file.read((char *) (&header), sizeof(header));
+    file.read((char *) (&data), sizeof(data));
     return 0;
+
 }
 
 void Bitmap::scanSize() {
 
     width = height = 0;
     widthBytes = 0;
-    memcpy(&width, header.biWidth, WIDTH_BYTES_SIZE);
-    memcpy(&height, header.biHeight, HEIGHT_BYTES_SIZE);
+    memcpy(&width, data.biWidth, WIDTH_BYTES_SIZE);
+    memcpy(&height, data.biHeight, HEIGHT_BYTES_SIZE);
     widthBytes = normalizeTo4(width * PIXEL_SIZE);
 }
 
@@ -76,7 +79,8 @@ void Bitmap:: scanPicture(std::ifstream &file) {
 }
 
 void Bitmap:: printHeader(std::ofstream &file) {
-    file.write((char*)(&header), HEADER_SIZE);
+    file.write((char*)(&header), sizeof(header));
+    file.write((char*)(&data), sizeof(data));
 }
 
 void Bitmap:: printPicture(std::ofstream &file) {
@@ -108,12 +112,10 @@ int Bitmap:: readBitmap(std::ifstream &file) {
     return 0;
 }
 
-int Bitmap:: getBitmapFromFile(std::ifstream &file) {
+void Bitmap:: getBitmapFromFile(std::ifstream &file) {
         if (readBitmap(file) != 0) {
-            //error("Memory allocation failed");
-            return 7;
+            throw std::logic_error("Memory allocation failed");
         }
-    return 0;
 }
 
 Bitmap::Bitmap(std::ifstream &file) {
@@ -121,9 +123,16 @@ Bitmap::Bitmap(std::ifstream &file) {
 }
 
 bool Bitmap::isCorrect(std::ifstream &file) {
-    file.read(header.bfType, sizeof(header.bfType));
-    file.seekg(HEADER_SIZE_POSITION, std::ios_base::beg);
-    file.read(header.headerSize, sizeof(header.headerSize));
-    file.seekg(0, std::ios_base::beg);
-    //return ;
+    file.read((char*)(&header), sizeof(header));
+    file.read((char*)(&data), sizeof(data));
+    if(data.bitsPerPixel != 24)
+        throw std::invalid_argument("format not supported");
+    return data.colorsInColorTable == 0;
 }
+
+
+Bitmap::Pixel::Pixel(unsigned char b, unsigned char g, unsigned char r) : b(b), g(g), r(r) {}
+
+Bitmap::Pixel::Pixel() {}
+
+

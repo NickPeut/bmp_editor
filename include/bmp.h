@@ -4,69 +4,69 @@
 #include<iostream>
 #include <cstring>
 #include <vector>
+#include <fstream>
+#include "processings_bmp.h"
 
 static const size_t PIXEL_SIZE = 3;
-static const size_t WIDTH_POSITION = 18;
-static const size_t HEADER_SIZE_POSITION = 14;
 static const size_t WIDTH_BYTES_SIZE = 4;
 static const size_t HEIGHT_BYTES_SIZE = 4;
-static const size_t HEADER_SIZE = 54;
-
-
 
 class Bitmap {
 
-    struct Pixel {
-        char data[3];
-    };
-    using PixelContainer = std::vector<std::vector<Pixel>>;
 #pragma pack(push, 1)
+    struct Header{
+        char bfType[2];// Сигнатура формата
+        char bfSizeFile[4]; //Changing Размер файла в байтах
+        char reserved1[2];// Зарезервированное поля = 0
+        char reserved2[2];// Зарезервированное поля = 0
+        char pixelArrOffset[4];// Положение пиксельных данных относительно начала
+    };
     struct BitmapData {
-        //HEADER
-        char bfType[2];
-        char bfSizeFile[4]; //Changing
-
-        //BOTH
-        char bfHeaderOtherFirst[8];
-
-
         //INFO
-        char headerSize[4];
-        char biWidth[4];
-        char biHeight[4];
-        char planes[2];
-        char bitsPerPixel[2];
-        char compression[4];
-        char imageSize[4];
-        char xPixelsPerMeter[4];
-        char yPixelsPerMeter[4];
-        char colorsInColorTable[4];
-        char importantColorCount[4];
-        /*//INFO
-        char headerSize[4];
-        char biWidth[4];
-        char biHeight[4];
-        char biOtherFirst[8]; //biPlanes, biBitCount, biCompression
-        char biSizeImage[4]; //Changing
-        char biOtherSecond[16]; //biXPelsPerMeters, biYPelsPerMeter, biClrUsed, biClrImportant
-         */
+        char headerSize[4]; // Размер данной структуры в байтах
+        char biWidth[4];// Ширина растра в пикселях
+        char biHeight[4];// Высота растра в пикселях
+        char planes[2];// Константа = 1
+        short bitsPerPixel;// Количество бит на пиксель
+        char compression[4];// Способ хранения пикселей
+        char imageSize[4];// Размер пиксельных данных
+        char xPixelsPerMeter[4];// Количество пикселей на метр по горизонатли
+        char yPixelsPerMeter[4];// Количество пикселей на метр по вертикали
+        int colorsInColorTable;// Размер таблицы цветов в ячейках ||| если 0 - таблицы нет.
+        char importantColorCount[4];// Количество ячеек от начала таблицы цветов до последней используемой
     };
 #pragma pack(pop)
-     size_t width;
-     size_t height;
-     size_t widthBytes;
-     BitmapData header;
-     Pixel** picture;
 
 public:
+
+    struct Pixel {
+        Pixel(unsigned char b, unsigned char g, unsigned char r);
+
+        Pixel();
+
+        unsigned char b;
+        unsigned char g;
+        unsigned char r;
+    };
+
+    size_t height;
+    size_t widthBytes;
+    size_t width;
+    Header header;
+    BitmapData data;
+    Pixel** picture;
+
 
     void saveBitmap(std::ofstream &file);
 
     void clearBitmap();
 
-    int getBitmapFromFile(std::ifstream &file);
+    void getBitmapFromFile(std::ifstream &file);
 
     Bitmap(std::ifstream &file);
+
+    void mirror(Point &point1, Point &point2, std::string &oxy);
+
 
 private:
     int readBitmap(std::ifstream &file);
@@ -88,5 +88,6 @@ private:
     void printPicture(std::ofstream &file);
 
     bool isCorrect(std::ifstream &file);
+
 };
 #endif //COURSECPP_BMP_H
