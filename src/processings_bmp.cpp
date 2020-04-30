@@ -21,3 +21,15 @@ void Bitmap::mirror(Point &point1, Point &point2, std::string &oxy) {
     red.r = 255;
     picture[point2.y][point2.x] = red;
 }
+
+
+void Bitmap::draw_rectangle(Point left, Point right, int w, Bitmap::Pixel color) {
+    for(int x = left.x; x <= right.x; x++) {
+        picture[left.y][x] = color;
+        picture[right.y][x] = color;
+    }
+    for(int y = left.y; y <= right.y; y++) {
+        picture[y][left.x] = color;
+        picture[y][right.x] = color;
+    }
+}

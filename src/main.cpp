@@ -29,24 +29,31 @@ int main(int argc, char *argv[]) {
         }
         Bitmap bitmap(file);
         file.close();
+
     //mirror
-    Point point1, point2;
-    std::string oxy;
-    std::cin >> point1.x >> point1.y >> point2.x >> point2.y >> oxy;
-    if(!checkOXY(point1, point2, oxy, bitmap)) {
-        throw std::invalid_argument("wrong axis!");
-    }
-    bitmap.mirror(point1, point2, oxy);
+    /*    Point point1, point2;
+        std::string oxy;
+        std::cin >> point1.x >> point1.y >> point2.x >> point2.y >> oxy;
+        if(!checkOXY(point1, point2, oxy, bitmap)) {
+            throw std::invalid_argument("wrong axis!");
+        }
+        bitmap.mirror(point1, point2, oxy);
+    */
 
     //draw a rectangle
+        Point s, f;
+        int width;
+        Bitmap::Pixel color;
+        bool fill;
+        Bitmap::Pixel colorFill;
 
-
+        std::cin >> s.x >> s.y >> f.x >> f.y >> width >> color.r >> color.g >> color.b;
+        bitmap.draw_rectangle(s, f, width, color);
 
     //save
         std::ofstream result("result.bmp", std::ofstream::binary);
         bitmap.saveBitmap(result);
         result.close();
-
         bitmap.clearBitmap();
     return 0;
 }

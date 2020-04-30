@@ -132,3 +132,4 @@ bool Bitmap::isCorrect(std::ifstream &file) {
 
 
 
+
