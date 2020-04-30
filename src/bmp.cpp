@@ -131,8 +131,4 @@ bool Bitmap::isCorrect(std::ifstream &file) {
 }
 
 
-Bitmap::Pixel::Pixel(unsigned char b, unsigned char g, unsigned char r) : b(b), g(g), r(r) {}
-
-Bitmap::Pixel::Pixel() {}
-
 
