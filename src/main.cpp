@@ -43,11 +43,12 @@ int main(int argc, char *argv[]) {
     //draw a rectangle
         Point s, f;
         int width;
-        Bitmap::Pixel color;
         bool fill;
         Bitmap::Pixel colorFill;
+        int r, g, b;
+        std::cin >> s.x >> s.y >> f.x >> f.y >> width >> r >> g >> b;
+        Bitmap::Pixel color{b, g, r};
 
-        std::cin >> s.x >> s.y >> f.x >> f.y >> width >> color.r >> color.g >> color.b;
         bitmap.draw_rectangle(s, f, width, color);
 
     //save

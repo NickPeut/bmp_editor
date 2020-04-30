@@ -40,6 +40,9 @@ class Bitmap {
 public:
 
     struct Pixel {
+        Pixel(int blue, int green, int red);
+        Pixel();
+
         unsigned char b;
         unsigned char g;
         unsigned char r;

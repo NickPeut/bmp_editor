@@ -131,5 +131,6 @@ bool Bitmap::isCorrect(std::ifstream &file) {
 }
 
 
+Bitmap::Pixel::Pixel(int blue, int green, int red) : b(blue), g(green), r(red) {}
 
-
+Bitmap::Pixel::Pixel() {}
