@@ -23,7 +23,7 @@ void Bitmap::mirror(Point &point1, Point &point2, std::string &oxy) {
 }
 
 
-void Bitmap::draw_rectangle(Point left, Point right, int w, Bitmap::Pixel color) {
+void Bitmap::drawRectangle(Point left, Point right, int w, Bitmap::Pixel color) {
     for(int x = left.x; x <= right.x; x++) {
         picture[left.y][x] = color;
         picture[right.y][x] = color;
@@ -31,5 +31,13 @@ void Bitmap::draw_rectangle(Point left, Point right, int w, Bitmap::Pixel color)
     for(int y = left.y; y <= right.y; y++) {
         picture[y][left.x] = color;
         picture[y][right.x] = color;
+    }
+}
+
+void Bitmap::fillRectangle(Point s, Point f, int w, Bitmap::Pixel color) {
+    for(int x = s.x + w; x <= f.x - w; x++) {
+        for(int y = s.y + w; y <= f.y - w; y++) {
+            picture[y][x] = color;
+        }
     }
 }

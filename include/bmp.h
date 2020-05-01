@@ -67,7 +67,9 @@ public:
     void mirror(Point &point1, Point &point2, std::string &oxy);
 
 
-    void draw_rectangle(Point left, Point right, int w, Pixel color);
+    void drawRectangle(Point left, Point right, int w, Pixel color);
+
+    void fillRectangle(Point s, Point f, int w, Pixel color);
 
 private:
     int readBitmap(std::ifstream &file);

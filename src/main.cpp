@@ -41,16 +41,22 @@ int main(int argc, char *argv[]) {
     */
 
     //draw a rectangle
+    //сделать проверку x, y, width
         Point s, f;
         int width;
         bool fill;
-        Bitmap::Pixel colorFill;
         int r, g, b;
         std::cin >> s.x >> s.y >> f.x >> f.y >> width >> r >> g >> b;
         Bitmap::Pixel color{b, g, r};
 
-        bitmap.draw_rectangle(s, f, width, color);
+        bitmap.drawRectangle(s, f, width, color);
 
+        std::cin >> fill;
+        if(fill) {
+            std::cin >> r >> g >> b;
+            Bitmap::Pixel colorFill{b, g, r};
+            bitmap.fillRectangle(s, f, width, colorFill);
+        }
     //save
         std::ofstream result("result.bmp", std::ofstream::binary);
         bitmap.saveBitmap(result);
