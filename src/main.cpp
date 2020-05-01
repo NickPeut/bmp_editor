@@ -3,6 +3,8 @@
 #include "bmp.h"
 #include "processings_bmp.h"
 
+bool checkXYW(Point s, Point f, int width, Bitmap &bitmap);
+
 bool isNameCorrect(char *name) {
     bool ans = false;
     regex_t regexPattern;
@@ -41,14 +43,15 @@ int main(int argc, char *argv[]) {
     */
 
     //draw a rectangle
-    //сделать проверку x, y, width
         Point s, f;
         int width;
         bool fill;
         int r, g, b;
         std::cin >> s.x >> s.y >> f.x >> f.y >> width >> r >> g >> b;
+        if(!checkXYW(s, f, width, bitmap)){
+            throw std::invalid_argument("wrong axis!");
+        }
         Bitmap::Pixel color{b, g, r};
-
         bitmap.drawRectangle(s, f, width, color);
 
         std::cin >> fill;
@@ -63,4 +66,10 @@ int main(int argc, char *argv[]) {
         result.close();
         bitmap.clearBitmap();
     return 0;
+}
+
+bool checkXYW(Point s, Point f, int width, Bitmap &bitmap) {
+    return (s.x >= 1 && s.x <= bitmap.width) && (s.x <= f.x && f.x >= 1 && f.x <= bitmap.width)
+           && (s.y >= 1 && s.y <= bitmap.height) && (s.y <= f.y && f.y >= 1 && f.y <= bitmap.height) &&
+           (width <= std::min(f.x-s.x, f.y-s.y));
 }
