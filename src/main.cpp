@@ -17,9 +17,13 @@ bool isNameCorrect(char *name) {
     return ans;
 }
 
+bool checkPoint(Point a, Bitmap bitmap) {
+    return a.x > 0 && a.x < bitmap.width && a.y > 0  && a.y < bitmap.height;
+}
+
 bool checkOXY(Point point1, Point point2, std::string &oxy, Bitmap &bitmap) {
-    return (oxy == "OX" || oxy == "OY") && (point1.x >= 1 && point1.x <= bitmap.width) && (point1.x <= point2.x && point2.x >= 1 && point2.x <= bitmap.width)
-           && (point1.y >= 1 && point1.y <= bitmap.height) && (point1.y <= point2.y && point2.y >= 1 && point2.y <= bitmap.height);
+    return (oxy == "OX" || oxy == "OY") && checkPoint(point1, bitmap) && checkPoint(point2, bitmap)
+            && point1.x <= point2.x && point1.y <= point2.y;
 }
 
 int main(int argc, char *argv[]) {
@@ -43,7 +47,7 @@ int main(int argc, char *argv[]) {
     */
 
     //draw a rectangle
-        Point s, f;
+/*        Point s, f;
         int width;
         bool fill;
         int r, g, b;
@@ -60,6 +64,15 @@ int main(int argc, char *argv[]) {
             Bitmap::Pixel colorFill{b, g, r};
             bitmap.fillRectangle(s, f, width, colorFill);
         }
+*/
+    //draw circle
+    Point s;
+    int rad, width;
+    int r, g, b;
+    std::cin >> s.x >> s.y >> rad >> width >> r >> g >> b;
+    Bitmap::Pixel color(b, g, r);
+    bitmap.drawCircle(s, rad, color, width);
+
     //save
         std::ofstream result("result.bmp", std::ofstream::binary);
         bitmap.saveBitmap(result);
@@ -69,7 +82,6 @@ int main(int argc, char *argv[]) {
 }
 
 bool checkXYW(Point s, Point f, int width, Bitmap &bitmap) {
-    return (s.x >= 1 && s.x <= bitmap.width) && (s.x <= f.x && f.x >= 1 && f.x <= bitmap.width)
-           && (s.y >= 1 && s.y <= bitmap.height) && (s.y <= f.y && f.y >= 1 && f.y <= bitmap.height) &&
-           (width <= std::min(f.x-s.x, f.y-s.y));
+    return checkPoint(s, bitmap) && checkPoint(f, bitmap)
+            && s.x <= f.x && s.y <= f.y && (width <= std::min(f.x-s.x, f.y-s.y));
 }

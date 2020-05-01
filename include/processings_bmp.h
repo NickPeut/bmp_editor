@@ -6,6 +6,10 @@
 #define COURSECPP_PROCESSINGS_BMP_H
 #include <fstream>
 struct Point{
+    Point(int x, int y);
+
+    Point();
+
     int x;
     int y;
 };

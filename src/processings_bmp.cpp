@@ -49,3 +49,22 @@ void Bitmap::fillRectangle(Point s, Point f, int w, Bitmap::Pixel color) {
         }
     }
 }
+
+void Bitmap::drawCircle(Point center, int rad, Bitmap::Pixel color, int w) {
+    if(w == 0) return;
+    picture[center.y][center.x] = color;
+    double e = 1e-6;
+    for(double i = center.x - rad; i < center.x + rad; i += e){
+        int y = (int)sqrt(rad*rad - (i - center.x) * (i - center.x)) + center.y;
+        int x = i;
+        picture[y][x] = color;
+        y = (int)-sqrt(rad*rad - (i - center.x) * (i - center.x)) + center.y;
+        picture[y][x] = color;
+
+    }
+    drawCircle(center, rad-1, color,w - 1);
+}
+
+Point::Point() {}
+
+Point::Point(int x, int y) : x(x), y(y) {}

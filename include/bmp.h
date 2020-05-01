@@ -4,6 +4,7 @@
 #include<iostream>
 #include <cstring>
 #include <vector>
+#include <cmath>
 #include <fstream>
 #include "processings_bmp.h"
 
@@ -70,6 +71,8 @@ public:
     void drawRectangle(Point left, Point right, int w, Pixel color);
 
     void fillRectangle(Point s, Point f, int w, Pixel color);
+
+    void drawCircle(Point center, int rad, Bitmap::Pixel color, int w);
 
 private:
     int readBitmap(std::ifstream &file);
