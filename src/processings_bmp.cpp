@@ -138,7 +138,7 @@ void Bitmap::drawPentagram(Point center, int radius, int w, Bitmap::Pixel color)
     drawCircle(center, radius, color, w);
     drawStar(center, radius, w, color);
 }
-
+/*
 void Bitmap::drawStar(const Point &center, int radius, int w, Bitmap::Pixel color) {
     Point vector(0, -radius - 1);
     const int STAR_ANGLE = 72;
@@ -159,9 +159,34 @@ void Bitmap::drawStar(const Point &center, int radius, int w, Bitmap::Pixel colo
         drawLine(peaks[i], peaks[(i + 2) % 5], color);
         i = (i + 2) % 5;
     } while(i != 0);
-
-
 }
+ */
+void Bitmap::drawStar(const Point &center, int radius, int w, Bitmap::Pixel color) {
+    Point vector(0, -radius - 1);
+    const Point base(0, -radius - 1);
+    const int STAR_ANGLE = 72;
+    const double STAR_ANGLE_RADS = (STAR_ANGLE / 180.0)* M_PI;
+    double angle = STAR_ANGLE_RADS;
+    std::vector<Point> peaks;
+    for (size_t i = 0; i < 5; i++) {
+        peaks.push_back(vector);
+        vector = base;
+        vector.rotate(angle);
+        angle += STAR_ANGLE_RADS;
+    }
+
+    for (auto& peak : peaks) {
+        peak += center;
+    }
+
+    int i = 0;
+    do {
+        drawLine(peaks[i], peaks[(i + 2) % 5], color);
+        i = (i + 2) % 5;
+    } while(i != 0);
+}
+
+
 
 Point::Point() {}
 
