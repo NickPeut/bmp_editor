@@ -63,7 +63,7 @@ public:
 
     void getBitmapFromFile(std::ifstream &file);
 
-    Bitmap(std::ifstream &file);
+    explicit Bitmap(std::ifstream &file);
 
     void mirror(Point &point1, Point &point2, std::string &oxy);
 
@@ -72,9 +72,16 @@ public:
 
     void fillRectangle(Point s, Point f, int w, Pixel color);
 
+    void drawLine(Point a, Point b, Pixel color);
+
     void drawCircle(Point center, int rad, Bitmap::Pixel color, int w);
 
+    void drawPentagram(Point center, int radius, int w, Pixel color);
+
+
 private:
+    void drawStar(const Point &center, int radius, int w, Pixel color);
+
     int readBitmap(std::ifstream &file);
 
     static size_t normalizeTo4(size_t x);

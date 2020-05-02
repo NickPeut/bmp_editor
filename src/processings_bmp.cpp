@@ -51,20 +51,135 @@ void Bitmap::fillRectangle(Point s, Point f, int w, Bitmap::Pixel color) {
 }
 
 void Bitmap::drawCircle(Point center, int rad, Bitmap::Pixel color, int w) {
-    if(w == 0) return;
-    picture[center.y][center.x] = color;
-    double e = 1e-6;
-    for(double i = center.x - rad; i < center.x + rad; i += e){
-        int y = (int)sqrt(rad*rad - (i - center.x) * (i - center.x)) + center.y;
-        int x = i;
-        picture[y][x] = color;
-        y = (int)-sqrt(rad*rad - (i - center.x) * (i - center.x)) + center.y;
-        picture[y][x] = color;
-
+    int x = 0;
+    int y = rad;
+    int delta = 1 - 2 * rad;
+    int error = 0;
+    while(y >= 0) {
+        for(int i = 0; i < w; i++) {
+            picture[center.x + x][center.y + y - i] = color;
+            picture[center.x + x][center.y - y + i] = color;
+            picture[center.x - x][center.y + y - i] = color;
+            picture[center.x - x][center.y - y + i] = color;
+            picture[center.x + x + i][center.y + y] = color;
+            picture[center.x + x + i][center.y - y] = color;
+            picture[center.x - x - i][center.y + y] = color;
+            picture[center.x - x  - i][center.y - y] = color;
+        }
+        error = 2 * (delta + y) - 1;
+        if(delta < 0 && error <= 0) {
+            ++x;
+            delta += 2 * x + 1;
+            continue;
+        }
+        error = 2 * (delta - x) - 1;
+        if(delta > 0 && error > 0) {
+            --y;
+            delta += 1 - 2 * y;
+            continue;
+        }
+        ++x;
+        delta += 2 * (x - y);
+        --y;
     }
-    drawCircle(center, rad-1, color,w - 1);
+}
+
+/*
+void Bitmap::drawLine(Point &a, Point &b, Pixel color) {
+    int deltax = abs(b.x - a.x);
+    int deltay = abs(b.y - a.y);
+    int error = 0;
+    int deltaerr = (deltay + 1);
+    int y = a.y;
+    int diry = b.y - a.y;
+    if(diry > 0)
+        diry = 1;
+    if(diry < 0)
+        diry = -1;
+    for(int x = a.x; x <= b.x; x++) {
+        picture[y][x] = color;
+        error = error + deltaerr;
+        if(error >= (deltax + 1))
+            y = y + diry;
+        error = error - (deltax + 1);
+    }
+}
+*/
+void Bitmap::drawLine(Point a, Point b, Bitmap::Pixel color) {
+    int deltaX = abs(b.x - a.x);
+    int deltaY = abs(b.y - a.y);
+    const int signX = a.x < b.x ? 1 : -1;
+    const int signY = a.y < b.y ? 1 : -1;
+    //
+    int error = deltaX - deltaY;
+    //
+    picture[b.y][b.x] = color;
+    while(a.x != b.x || a.y != b.y)
+    {
+        picture[a.y][a.x] = color;
+        const int error2 = error * 2;
+        //
+        if(error2 > -deltaY)
+        {
+            error -= deltaY;
+            a.x += signX;
+        }
+        if(error2 < deltaX)
+        {
+            error += deltaX;
+            a.y += signY;
+        }
+    }
+
+}
+
+
+void Bitmap::drawPentagram(Point center, int radius, int w, Bitmap::Pixel color) {
+    drawCircle(center, radius, color, w);
+    drawStar(center, radius, w, color);
+}
+
+void Bitmap::drawStar(const Point &center, int radius, int w, Bitmap::Pixel color) {
+    Point vector(0, -radius - 1);
+    const int STAR_ANGLE = 72;
+    const double STAR_ANGLE_RADS = (STAR_ANGLE / 180.0)* M_PI;
+
+    std::vector<Point> peaks;
+    for (size_t i = 0; i < 5; i++) {
+        peaks.push_back(vector);
+        vector.rotate(STAR_ANGLE_RADS);
+    }
+
+    for (auto& peak : peaks) {
+        peak += center;
+    }
+
+    int i = 0;
+    do {
+        drawLine(peaks[i], peaks[(i + 2) % 5], color);
+        i = (i + 2) % 5;
+    } while(i != 0);
+
+
 }
 
 Point::Point() {}
 
 Point::Point(int x, int y) : x(x), y(y) {}
+
+Point operator+(const Point &first, const Point &second) {
+    return {first.x + second.x, first.y + second.y};
+}
+
+Point &Point::operator += (const Point &other) {
+    *this = *this + other;
+    return *this;
+}
+
+Point &Point::rotate(double angle) {
+    auto save_x = x;
+    auto save_y = y;
+    x = save_x * cos(angle) - save_y * sin(angle);
+    y = save_x * sin(angle) + save_y * cos(angle);
+    //TODO
+}

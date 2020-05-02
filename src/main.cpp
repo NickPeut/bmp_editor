@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
         int r, g, b;
         std::cin >> s.x >> s.y >> f.x >> f.y >> width >> r >> g >> b;
         if(!checkXYW(s, f, width, bitmap)){
-            throw std::invalid_argument("wrong axis!");
+            throw std::invalid_argument("");
         }
         Bitmap::Pixel color{b, g, r};
         bitmap.drawRectangle(s, f, width, color);
@@ -70,8 +70,10 @@ int main(int argc, char *argv[]) {
     int rad, width;
     int r, g, b;
     std::cin >> s.x >> s.y >> rad >> width >> r >> g >> b;
+    if(!(checkPoint(s, bitmap) &&  rad > width))
+        throw std::invalid_argument("");
     Bitmap::Pixel color(b, g, r);
-    bitmap.drawCircle(s, rad, color, width);
+    bitmap.drawPentagram(s, rad, width, color);
 
     //save
         std::ofstream result("result.bmp", std::ofstream::binary);
