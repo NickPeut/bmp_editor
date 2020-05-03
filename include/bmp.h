@@ -76,7 +76,7 @@ public:
 
     void drawCircle(Point center, int rad, Bitmap::Pixel color, std::vector<std::pair<Point, bool>> &circle, bool flag);
 
-    void drawPentagram(Point center, int radius, int w, Pixel color);
+    void drawPentagram(Point center, int radius, int w, Pixel colorCircle, Pixel colorStar);
 
 
 private:

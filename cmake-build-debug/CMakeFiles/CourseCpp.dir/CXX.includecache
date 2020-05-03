@@ -23,8 +23,12 @@ processings_bmp.h
 ../include/processings_bmp.h
 fstream
 -
+map
+-
 
 /home/nuka/CLionProjects/CourseCpp/src/processings_bmp.cpp
+algorithm
+-
 processings_bmp.h
 /home/nuka/CLionProjects/CourseCpp/src/processings_bmp.h
 bmp.h

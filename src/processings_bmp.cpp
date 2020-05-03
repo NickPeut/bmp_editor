@@ -90,7 +90,7 @@ Bitmap::drawCircle(Point center, int rad, Bitmap::Pixel color, std::vector<std::
         for (auto ny : {+y, -y})
             for (auto nx : {+x, -x})
             {
-                picture[center.y + ny][center.x + nx] = {0, 0, 0};
+                picture[center.y + ny][center.x + nx] = color;
                 circle.emplace_back(Point(center.x + nx, center.y + ny), flag);
             }
 
@@ -146,14 +146,17 @@ bool cmp(const std::pair<Point, bool> a, const std::pair<Point, bool> b) {
     return a.first.x < b.first.x;
 }
 
-void Bitmap::drawPentagram(Point center, int radius, int w, Bitmap::Pixel color) {
+void Bitmap::drawPentagram(Point center, int radius, int w, Pixel colorCircle, Pixel colorStar) {
     std::vector<std::pair<Point, bool>> circle;
-    drawCircle(center, radius - 0, Pixel(0, 0, 0), circle, true);
-    drawCircle(center, radius - w + 1, Pixel(0, 0, 0), circle, false);
+
+    drawCircle(center, radius - 0, colorCircle, circle, false);
+    drawCircle(center, radius + w - 1, colorCircle, circle, true);
+
     std::sort(circle.begin(), circle.end(), cmp);
-    fillCircle(circle, Pixel(0, 255, 0));
-    for(double i = 0; i < w; i++) {
-        drawStar(center, radius - i, w, color);
+    fillCircle(circle, colorCircle);
+
+    for (double i = 0; i < w; i++) {
+        drawStar(center, radius - i + 1, w, colorStar);
     }
 }
 
@@ -185,7 +188,7 @@ void Bitmap::drawStar(const Point &center, int radius, int w, Bitmap::Pixel colo
 void Bitmap::fillCircle(std::vector<std::pair<Point, bool>> circle, const Bitmap::Pixel &color) {
     for(unsigned long i = 0; i < circle.size() - 1; i++) {
         if(circle[i].first.x == circle[i + 1].first.x && (circle[i].second | circle[i + 1].second)) {
-            for (int y = circle[i].first.y; y < circle[i + 1].first.y; y++) {
+            for (int y = circle[i].first.y; y <= circle[i + 1].first.y; y++) {
                 int x = circle[i].first.x;
                 picture[y][x] = color;
             }

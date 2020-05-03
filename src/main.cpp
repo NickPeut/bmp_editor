@@ -5,6 +5,8 @@
 
 bool checkXYW(Point s, Point f, int width, Bitmap &bitmap);
 
+bool checkArg(Point s, int rad, int width, Bitmap bitmap);
+
 bool isNameCorrect(char *name) {
     bool ans = false;
     regex_t regexPattern;
@@ -66,14 +68,16 @@ int main(int argc, char *argv[]) {
         }
 */
     //draw circle
-    Point s;
-    int rad, width;
-    int r, g, b;
-    std::cin >> s.x >> s.y >> rad >> width >> r >> g >> b;
-    if(!(checkPoint(s, bitmap) &&  rad >= width && rad >= 3 && width > 0))
-        throw std::invalid_argument("");
-    Bitmap::Pixel color(b, g, r);
-    bitmap.drawPentagram(s, rad, width, color);
+        Point s;
+        int rad, width;
+        int r, g, b;
+        std::cin >> s.x >> s.y >> rad >> width >> r >> g >> b;
+        Bitmap::Pixel colorCircle(b, g, r);
+        std::cin >> r >> g >> b;
+        Bitmap::Pixel colorStar(b, g, r);
+       if(checkArg(s, rad, width, bitmap))
+            throw std::invalid_argument("");
+        bitmap.drawPentagram(s, rad, width, colorCircle, colorStar);
 
     //save
         std::ofstream result("result.bmp", std::ofstream::binary);
@@ -82,6 +86,14 @@ int main(int argc, char *argv[]) {
         bitmap.clearBitmap();
     return 0;
 }
+
+bool checkArg(Point s, int rad, int width, Bitmap bitmap) {
+    return !(checkPoint(s, bitmap)) &&
+        !checkPoint({s.x + rad + width,s.y + rad + width}, bitmap) &&
+            !checkPoint({s.x - rad - width,s.y - rad - width}, bitmap) &&
+                rad < 3 && width <= 0;
+}
+
 
 bool checkXYW(Point s, Point f, int width, Bitmap &bitmap) {
     return checkPoint(s, bitmap) && checkPoint(f, bitmap)
