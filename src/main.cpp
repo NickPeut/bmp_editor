@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     int rad, width;
     int r, g, b;
     std::cin >> s.x >> s.y >> rad >> width >> r >> g >> b;
-    if(!(checkPoint(s, bitmap) &&  rad > width))
+    if(!(checkPoint(s, bitmap) &&  rad >= width && rad >= 3 && width > 0))
         throw std::invalid_argument("");
     Bitmap::Pixel color(b, g, r);
     bitmap.drawPentagram(s, rad, width, color);
