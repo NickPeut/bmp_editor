@@ -2,6 +2,7 @@
 #define COURSECPP_PROCESSINGS_BMP_H
 #include <fstream>
 #include <map>
+
 struct Point {
 
     Point(int x, int y);
@@ -16,6 +17,7 @@ struct Point {
     int x;
     int y;
 };
+
 
 
 #endif //COURSECPP_PROCESSINGS_BMP_H

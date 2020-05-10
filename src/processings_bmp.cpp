@@ -1,28 +1,23 @@
 #include <algorithm>
 #include "processings_bmp.h"
 #include "bmp.h"
-void Bitmap::mirror(Point &point1, Point &point2, std::string &oxy) {
-    if(oxy == "OY") {
-        for(int x = 0; x <= (point2.x - point1.x) / 2; x++) {
-            for(int y = point1.y; y < point2.y; y++) {
+int Bitmap::mirror(Point &point1, Point &point2, std::string &oxy) {
+    if (oxy == "OY" || oxy == "ox") {
+        for (int x = 0; x <= (point2.x - point1.x) / 2; x++) {
+            for (int y = point1.y; y < point2.y; y++) {
                 std::swap((picture[y][x + point1.x]), (picture[y][point2.x - x]));
             }
         }
     }
-    if(oxy == "OX") {
-        for(int x = point1.x; x < point2.x; x++) {
-            for(int y = 0; y < (point2.y - point1.y) / 2; y++) {
+    else if (oxy == "OX" || oxy == "ox") {
+        for (int x = point1.x; x < point2.x; x++) {
+            for (int y = 0; y < (point2.y - point1.y) / 2; y++) {
                 std::swap((picture[y + point1.y][x]), (picture[point2.y - y][x]));
             }
         }
-    }
-    Pixel red;
-    red.b = 0;
-    red.g = 0;
-    red.r = 255;
-    picture[point2.y][point2.x] = red;
+    } else return 1;
+    return 0;
 }
-
 
 void Bitmap::drawRectangle(Point left, Point right, int w, Bitmap::Pixel color) {
     if (w == 0) return;
@@ -50,37 +45,8 @@ void Bitmap::fillRectangle(Point s, Point f, int w, Bitmap::Pixel color) {
         }
     }
 }
-/*
-void Bitmap::drawCircle(Point center, int rad, Bitmap::Pixel color, int w) {
-    int x = 0;
-    int y = rad;
-    int delta = 3 - 2 * rad;
-    int error = 0;
-    while (y >= 0) {
-        picture[center.x + x][center.y + y] = color;
-        picture[center.x + x][center.y - y] = color;
-        picture[center.x - x][center.y + y] = color;
-        picture[center.x - x ][center.y - y] = color;
-        error = 2 * (delta + y) - 1;
-        if (delta < 0 && error <= 0) {
-            ++x;
-            delta += 2 * x + 1;
-            continue;
-        }
-        error = 2 * (delta - x) - 1;
-        if (delta > 0 && error > 0) {
-            --y;
-            delta += 1 - 2 * y;
-            continue;
-        }
-        ++x;
-        delta += 2 * (x - y);
-        --y;
-    }
-}*/
 
-void
-Bitmap::drawCircle(Point center, int rad, Bitmap::Pixel color, std::vector<std::pair<Point, bool>> &circle, const bool flag) {
+void Bitmap::drawCircle(Point center, int rad, Bitmap::Pixel color, std::vector<std::pair<Point, bool>> &circle, const bool flag) {
     int x = 0;
     int y = rad;
     int delta = 1 - 2 * rad;
@@ -121,18 +87,15 @@ void Bitmap::drawLine(Point a, Point b, Bitmap::Pixel color) {
     int error = deltaX - deltaY;
 
     picture[b.y][b.x] = color;
-    while (a.x != b.x || a.y != b.y)
-    {
+    while (a.x != b.x || a.y != b.y) {
         picture[a.y][a.x] = color;
         const int error2 = error * 2;
 
-        if (error2 > -deltaY)
-        {
+        if (error2 > -deltaY) {
             error -= deltaY;
             a.x += signX;
         }
-        if (error2 < deltaX)
-        {
+        if (error2 < deltaX) {
             error += deltaX;
             a.y += signY;
         }
@@ -140,23 +103,23 @@ void Bitmap::drawLine(Point a, Point b, Bitmap::Pixel color) {
 }
 
 bool cmp(const std::pair<Point, bool> a, const std::pair<Point, bool> b) {
-    if(a.first.x == b.first.x) {
+    if (a.first.x == b.first.x) {
         return a.first.y <= b.first.y;
     }
     return a.first.x < b.first.x;
 }
 
-void Bitmap::drawPentagram(Point center, int radius, int w, Pixel colorCircle, Pixel colorStar) {
+void Bitmap::drawPentagram(Point center, int radius, int w, Pixel color) {
     std::vector<std::pair<Point, bool>> circle;
 
-    drawCircle(center, radius - 0, colorCircle, circle, false);
-    drawCircle(center, radius + w - 1, colorCircle, circle, true);
+    drawCircle(center, radius - 0, color, circle, false);
+    drawCircle(center, radius + w - 1, color, circle, true);
 
     std::sort(circle.begin(), circle.end(), cmp);
-    fillCircle(circle, colorCircle);
+    fillCircle(circle, color);
 
     for (double i = 0; i < w; i++) {
-        drawStar(center, radius - i + 1, w, colorStar);
+        drawStar(center, radius - i + 1, w, color);
     }
 }
 
@@ -186,12 +149,53 @@ void Bitmap::drawStar(const Point &center, int radius, int w, Bitmap::Pixel colo
 }
 
 void Bitmap::fillCircle(std::vector<std::pair<Point, bool>> circle, const Bitmap::Pixel &color) {
-    for(unsigned long i = 0; i < circle.size() - 1; i++) {
-        if(circle[i].first.x == circle[i + 1].first.x && (circle[i].second | circle[i + 1].second)) {
+    for (unsigned long i = 0; i < circle.size() - 1; i++) {
+        if (circle[i].first.x == circle[i + 1].first.x && (circle[i].second | circle[i + 1].second)) {
             for (int y = circle[i].first.y; y <= circle[i + 1].first.y; y++) {
                 int x = circle[i].first.x;
                 picture[y][x] = color;
             }
+        }
+    }
+}
+
+int max(const int &a, const int &b) {
+    return a > b ? a : b;
+}
+
+void Bitmap::makeCollage(std::vector<Bitmap> &images, const int &n, const int &m) {
+    int maxX = 0, maxY = 0;
+    for (auto & image : images) {
+        maxX = max(maxX, image.width);
+        maxY = max(maxY, image.height);
+    }
+    height = maxY * n;
+    width = maxX * m;
+    widthBytes = normalizeTo4(width * PIXEL_SIZE);
+
+    header = images[0].header;
+    data = images[0].data;
+
+    size_t pixelSize = widthBytes * height;
+    memcpy(&data.imageSize, &pixelSize, sizeof(data.imageSize));
+
+    size_t fileSize = pixelSize + sizeof(header);
+    memcpy(&header.bfSizeFile, &fileSize, sizeof(header.bfSizeFile));
+
+    memcpy(&data.biWidth, &width, sizeof(data.biWidth));
+    memcpy(&data.biHeight, &height, sizeof(data.biHeight));
+
+    initPixelArray();
+    int numImage = 0;
+
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < m; j++) {
+            for(size_t y = 0; y < images[numImage].height; y++) {
+                for(size_t x = 0; x < images[numImage].width; x++) {
+                    picture[y + maxY * i][x + maxX * j] = images[numImage].picture[y][x];
+                }
+            }
+            numImage++;
         }
     }
 }
@@ -217,3 +221,4 @@ Point &Point::rotate(double angle) {
     y = save_x * sin(angle) + save_y * cos(angle);
     //TODO
 }
+

@@ -18,11 +18,9 @@ int Bitmap:: scanHeader(std::ifstream &file) {
         return 1;
     }
 
-
     file.read((char *) (&header), sizeof(header));
     file.read((char *) (&data), sizeof(data));
     return 0;
-
 }
 
 void Bitmap::scanSize() {
@@ -35,7 +33,7 @@ void Bitmap::scanSize() {
 }
 
 int Bitmap:: initPixelArray() {
-    try{
+    try {
         picture = new Pixel* [height];
         if (picture == nullptr)
             throw 1;
@@ -43,14 +41,12 @@ int Bitmap:: initPixelArray() {
         picture[0] = new Pixel [widthBytes* height];
         memset(picture[0], 0, widthBytes * height);
 
-        if (picture[0] == nullptr)
-        {
+        if (picture[0] == nullptr) {
             delete(picture);
             throw 1;
         }
 
-        for (size_t i = 1; i < height; i++)
-        {
+        for (size_t i = 1; i < height; i++) {
             picture[i] = (Pixel*)((char*)picture[i - 1] + widthBytes);
         }
     }
@@ -62,10 +58,8 @@ int Bitmap:: initPixelArray() {
 }
 
 void Bitmap:: reverse() {
-    for (size_t i = 0; i * 2 < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
+    for (size_t i = 0; i * 2 < height; i++) {
+        for (size_t j = 0; j < width; j++) {
             Pixel tmp = picture[i][j];
             picture[i][j] = picture[height - i - 1][j];
             picture[height - i - 1][j] = tmp;
@@ -100,12 +94,11 @@ void Bitmap:: clearBitmap() {
 }
 
 int Bitmap:: readBitmap(std::ifstream &file) {
-    if(scanHeader(file) != 0) {
+    if (scanHeader(file) != 0) {
         return 1;
     }
     scanSize();
-    if (initPixelArray() != 0)
-    {
+    if (initPixelArray() != 0) {
         return 1;
     }
     scanPicture(file);
@@ -122,15 +115,17 @@ Bitmap::Bitmap(std::ifstream &file) {
     getBitmapFromFile(file);
 }
 
+Bitmap::Bitmap() {}
+
 bool Bitmap::isCorrect(std::ifstream &file) {
     file.read((char*)(&header), sizeof(header));
     file.read((char*)(&data), sizeof(data));
-    if(data.bitsPerPixel != 24)
+    if (data.bitsPerPixel != 24)
         throw std::invalid_argument("format not supported");
     return data.colorsInColorTable == 0;
 }
 
 
-Bitmap::Pixel::Pixel(int blue, int green, int red) : b(blue), g(green), r(red) {}
+Bitmap::Pixel::Pixel(int red, int green, int blue) : b(blue), g(green), r(red) {}
 
 Bitmap::Pixel::Pixel() {}

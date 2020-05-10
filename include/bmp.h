@@ -41,7 +41,7 @@ class Bitmap {
 public:
 
     struct Pixel {
-        Pixel(int blue, int green, int red);
+        Pixel(int red, int green, int blue);
         Pixel();
 
         unsigned char b;
@@ -57,29 +57,32 @@ public:
     Pixel** picture;
 
 
+    explicit Bitmap();
+
+    explicit Bitmap(std::ifstream &file);
+
     void saveBitmap(std::ofstream &file);
 
     void clearBitmap();
 
-    void getBitmapFromFile(std::ifstream &file);
-
-    explicit Bitmap(std::ifstream &file);
-
-    void mirror(Point &point1, Point &point2, std::string &oxy);
-
+    int mirror(Point &point1, Point &point2, std::string &oxy);
 
     void drawRectangle(Point left, Point right, int w, Pixel color);
 
     void fillRectangle(Point s, Point f, int w, Pixel color);
 
+    void drawPentagram(Point center, int radius, int w, Pixel color);
+
+    void makeCollage(std::vector<Bitmap> &images, const int &n, const int &m);
+
+    void getBitmapFromFile(std::ifstream &file);
+
+private:
+
     void drawLine(Point a, Point b, Pixel color);
 
     void drawCircle(Point center, int rad, Bitmap::Pixel color, std::vector<std::pair<Point, bool>> &circle, bool flag);
 
-    void drawPentagram(Point center, int radius, int w, Pixel colorCircle, Pixel colorStar);
-
-
-private:
     void drawStar(const Point &center, int radius, int w, Pixel color);
 
     int readBitmap(std::ifstream &file);
