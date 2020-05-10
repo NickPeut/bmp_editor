@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
             {"mirror",           no_argument,       nullptr, 'm'}, //1
             {"axis",             required_argument, nullptr, 'a'},
 
-            {"draw_a_rectangle", no_argument,       nullptr, 'd'}, //2
+            {"draw_rectangle", no_argument,       nullptr, 'd'}, //2
             {"start",          required_argument, nullptr, 'f'},
             {"finish",         required_argument, nullptr, 'u'},
             {"color_rectangle",  required_argument, nullptr, 'c'},
@@ -149,23 +149,23 @@ int main(int argc, char *argv[]) {
 
 
     std::map<std::string, Bitmap::Pixel> colors = {
-            {"Cyan",  {2, 2, 8}},
-            {"Black", {0, 0, 0}},
-            {"Gray", {128, 128, 128}},
-            {"White", {255, 255, 255}},
-            {"Fuchsia", {255, 0, 255}},
-            {"Purple", {128, 0, 128}},
-            {"Red", {255, 0, 0}},
-            {"Maroon", {128, 0, 0}},
-            {"Yellow", {255, 255, 0}},
-            {"Olive", {128, 128, 0}},
-            {"Lime", {0, 255, 0}},
-            {"Aqua", {0, 255, 255}},
-            {"Teal", {0, 128, 128}},
-            {"Blue", {0, 0, 255}},
-            {"Navy", {0, 0, 128}}
+            {"cyan",  {2, 2, 8}},
+            {"black", {0, 0, 0}},
+            {"gray", {128, 128, 128}},
+            {"white", {255, 255, 255}},
+            {"fuchsia", {255, 0, 255}},
+            {"purple", {128, 0, 128}},
+            {"red", {255, 0, 0}},
+            {"maroon", {128, 0, 0}},
+            {"yellow", {255, 255, 0}},
+            {"olive", {128, 128, 0}},
+            {"lime", {0, 255, 0}},
+            {"aqua", {0, 255, 255}},
+            {"teal", {0, 128, 128}},
+            {"blue", {0, 0, 255}},
+            {"navy", {0, 0, 128}}
     };
-
+    bool flag_input = false;
     int rez;
     int option_index;
     while ((rez = getopt_long(argc, argv, short_options,
@@ -191,9 +191,14 @@ int main(int argc, char *argv[]) {
                 }
                 bitmap.getBitmapFromFile(file);
                 file.close();
+                flag_input = true;
                 break;
             };
             case 's': { //save
+                if(!flag_input) {
+                    error("You did not enter a input file name");
+                    return 0;
+                }
                 if(!isNameCorrect(optarg)) {
                     error("invalid argument in save");
                     return 0;
@@ -205,7 +210,12 @@ int main(int argc, char *argv[]) {
                 break;
             };
             case 'm': { //mirror
-            //
+
+                if(!flag_input) {
+                    error("You did not enter a input file name");
+                    return 0;
+                }
+
                 int k = 3;
                 std::vector<bool> used(3, false);
                 std::string axis;
@@ -269,6 +279,10 @@ int main(int argc, char *argv[]) {
                         };
                     };
                 };
+                if(!checkOXY(start, finish, axis, bitmap)) {
+                    error("invalid input in mirror");
+                    return 0;
+                }
                 if(bitmap.mirror(start, finish, axis) != 0) {
                     error("invalid input in mirror");
                     return 0;
@@ -276,14 +290,19 @@ int main(int argc, char *argv[]) {
                 break;
             };
             case 'd': { //draw_a_rectangle
+
+                if(!flag_input) {
+                    error("You did not enter a input file name");
+                    return 0;
+                }
+
                 int k = 5;
                 std::vector<bool> used(5, false);
                 Bitmap:Point start, finish;
                 bool isFill = false;
                 int width = 0;
                 std::string colorLine, colorFill;
-                //
-                while ((rez = getopt_long(argc, argv, short_options,
+                while (k != 0 && (rez = getopt_long(argc, argv, short_options,
                                           long_options, &option_index)) != -1) {
                     switch (rez) {
                         case 'f': { // "start"
@@ -345,22 +364,42 @@ int main(int argc, char *argv[]) {
                                 error("too much argument in rectangle, is fill");
                                 return 0;
                             }
-                            if(strcmp(optarg, "yes") == 0) k++;
-                            isFill = true;
-                            k--;
-                            used[3] = true;
-                            break;
+                            try {
+                                std::string str = optarg;
+                                if (str == "yes" || str == "Yes" || str == "YES") {
+                                    isFill = true;
+                                    used[3] = true;
+                                    break;
+                                } else if (str == "no" || str == "NO" || str == "No") {
+                                    k--;
+                                    used[3] = true;
+                                    break;
+                                } else {
+                                    throw std::invalid_argument("");
+                                }
+                            }
+                            catch(std::exception &e){
+                                error("invalid argument in rectangle, is fill");
+                                return 0;
+                            }
                         };
                         case 'l': { // "color_fill"
+                            if(!isFill) {
+                                error("color fill with false is fill");
+                                return 0;
+                            }
                             if(used[4]) {
                                 error("too much argument in rectangle, color fill");
                                 return 0;
                             }
                             try {
-                                ...
+                                colorFill = optarg;
+                                if(colors.find(colorFill) == colors.end()) {
+                                    throw std::invalid_argument("color fill");
+                                }
                             }
                             catch (std::exception &e) {
-                                error("invalid argument");
+                                error("invalid argument in rectangle, color fill");
                                 return 0;
                             }
                             k--;
@@ -376,7 +415,7 @@ int main(int argc, char *argv[]) {
                                 width = std::stoi(optarg);
                             }
                             catch (std::exception &e) {
-                                error("invalid argument");
+                                error("invalid argument in rectangle, line width");
                                 return 0;
                             }
                             k--;
@@ -384,17 +423,30 @@ int main(int argc, char *argv[]) {
                         };
                         case '?':
                         default: {
-                            error("invalid option");
+                            error("invalid option in rectangle");
+                            std::cout << optarg;
                             return 0;
                         };
                     };
                 };
+                if(!checkXYW(start, finish, width, bitmap)) {
+                    error("invalid argument in rectangle");
+                    return 0;
+                }
                 bitmap.drawRectangle(start, finish, width, colors[colorLine]);
                 if(isFill) bitmap.fillRectangle(start, finish, width, colors[colorFill]);
                 break;
             };
+
+
+
             case 'p': { // "draw_pentagram"
-            /////////////////////////
+
+                if(!flag_input) {
+                    error("You did not enter a input file name");
+                    return 0;
+                }
+
                 int k = 4;
                 std::vector<bool> used(k, false);
                 int rad = 0;
@@ -402,7 +454,7 @@ int main(int argc, char *argv[]) {
                 Point center;
                 Bitmap::Pixel color;
 
-                while ((rez = getopt_long(argc, argv, short_options,
+                while (k != 0 && (rez = getopt_long(argc, argv, short_options,
                                           long_options, &option_index)) != -1) {
                     switch (rez) {
                         case 'g': { // "width_line"
@@ -485,13 +537,18 @@ int main(int argc, char *argv[]) {
 
 
             case 'j': { // "make_collage"
-                ////////////////////////
+
+                if(!flag_input) {
+                    error("You did not enter a input file name");
+                    return 0;
+                }
+
                 int k = 3;
                 std::vector<bool> used(k, false);
                 int n = 0, m = 0;
                 std::vector<std::string> name;
 
-                while ((rez = getopt_long(argc, argv, short_options,
+                while (k != 0 && (rez = getopt_long(argc, argv, short_options,
                                           long_options, &option_index)) != -1) {
                     switch (rez) {
                         case 'b': { // "picture_list"
