@@ -34,15 +34,14 @@ void Bitmap::scanSize() {
 
 int Bitmap:: initPixelArray() {
     try {
-        picture = new Pixel* [height];
+        picture = (Pixel**)malloc(height * sizeof(Pixel*));
         if (picture == nullptr)
             throw 1;
-
-        picture[0] = new Pixel [widthBytes* height];
+        picture[0] = (Pixel*)malloc(widthBytes * height);
         memset(picture[0], 0, widthBytes * height);
 
         if (picture[0] == nullptr) {
-            delete(picture);
+            free(picture);
             throw 1;
         }
 

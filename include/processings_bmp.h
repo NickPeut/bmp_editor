@@ -10,7 +10,7 @@ struct Point {
 
     friend Point operator +(const Point& first, const Point& second);
 
-    Point& rotate(double angle);
+    void rotate(double angle);
 
     Point& operator += (const Point &other);
 

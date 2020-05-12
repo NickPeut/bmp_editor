@@ -7,9 +7,7 @@ bool checkXYW(Point s, Point f, int width, Bitmap &bitmap);
 
 bool checkArg(Point s, int rad, int width, Bitmap bitmap);
 
-Bitmap makeCollage(std::vector<Bitmap> images, int n, int m);
-
-void error(std::string str);
+void error(const std::string& str);
 
 bool isNameCorrect(char *name) {
     bool ans = false;
@@ -33,89 +31,8 @@ bool checkOXY(Point point1, Point point2, std::string &oxy, Bitmap &bitmap) {
 }
 
 int main(int argc, char *argv[]) {
-    //read
-    /*
-        isNameCorrect(argv[2]);
-        std::ifstream file(argv[2], std::ifstream::binary);
-        if (!file.is_open()) {
-            throw std::invalid_argument("Can't open input file");
-        }
-        Bitmap bitmap(file);
-        file.close();
-*/
-    //mirror
-    /*    Point point1, point2;
-        std::string oxy;
-        std::cin >> point1.x >> point1.y >> point2.x >> point2.y >> oxy;
-        if(!checkOXY(point1, point2, oxy, bitmap)) {
-            throw std::invalid_argument("wrong axis!");
-        }
-        bitmap.mirror(point1, point2, oxy);
-    */
-    //draw a rectangle
-    /*        Point s, f;
-        int width;
-        bool fill;
-        int r, g, b;
-        std::cin >> s.x >> s.y >> f.x >> f.y >> width >> r >> g >> b;
-        if(!checkXYW(s, f, width, bitmap)){
-            throw std::invalid_argument("");
-        }
-        Bitmap::Pixel color{b, g, r};
-        bitmap.drawRectangle(s, f, width, color);
-
-        std::cin >> fill;
-        if(fill) {
-            std::cin >> r >> g >> b;
-            Bitmap::Pixel colorFill{b, g, r};
-            bitmap.fillRectangle(s, f, width, colorFill);
-        }
-*/
-    //draw pentagram
-    /*
-        Point s;
-        int rad, width;
-        int r, g, b;
-        std::cin >> s.x >> s.y >> rad >> width >> r >> g >> b;
-        Bitmap::Pixel color(b, g, r);
-        if(checkArg(s, rad, width, bitmap))
-            throw std::invalid_argument("");
-    bitmap.drawPentagram(s, rad, width, color);
-*/
-    //make collage
-    /*
-    int n, m;
-    std::cin >> n >> m;
-    std::vector<Bitmap> images;
-    for(int i = 0; i < n * m; i++) {
-        isNameCorrect(argv[i + 2]);
-        std::cout << argv[i + 2] << std::endl;
-        std::ifstream file(argv[i + 2], std::ifstream::binary);
-        if (!file.is_open()) {
-            throw std::invalid_argument("Can't open input file");
-        }
-        Bitmap bitmap(file);
-        images.emplace_back(bitmap);
-        file.close();
-    }
-    Bitmap new_bitmap;
-    new_bitmap.makeCollage(images, n, m);
-    std::ofstream result("result.bmp", std::ofstream::binary);
-    new_bitmap.saveBitmap(result);
-    result.close();
-    new_bitmap.clearBitmap();
-*/
-    //save
-    /*
-        std::ofstream result("result.bmp", std::ofstream::binary);
-        bitmap.saveBitmap(result);
-        result.close();
-        bitmap.clearBitmap();
-    */
-
     Bitmap bitmap;
     std::vector<int> func;
-    int arg = 0;
 
     const char *short_options = "hr:ma:df:u:c:i:l:g:pz:q:jk:b:s:";
 
@@ -135,13 +52,13 @@ int main(int argc, char *argv[]) {
             {"color_fill",       required_argument, nullptr, 'l'},
             {"width_line",       required_argument, nullptr, 'g'},
 
-            {"draw pentagram",   no_argument,       nullptr, 'p'}, //3
+            {"draw_pentagram",   no_argument,       nullptr, 'p'}, //3
             {"center",         required_argument, nullptr, 'z'},
             {"rad",         required_argument, nullptr, 't'},
             {"color_pentagram",  required_argument, nullptr, 'q'},
 
-            {"make collage",     no_argument,       nullptr, 'j'}, //4
-            {"num",           required_argument, nullptr, 'k'},
+            {"make_collage",     no_argument,       nullptr, 'j'}, //4
+            {"nums",           required_argument, nullptr, 'k'},
             {"picture_list",     required_argument, nullptr, 'b'},
 
             {"save",             required_argument,       nullptr, 's'} //5
@@ -172,28 +89,25 @@ int main(int argc, char *argv[]) {
                               long_options, &option_index)) != -1) {
         switch (rez) {
             case 'h': { //help
-                std::cout << "-h or --help to output of this help" << std::endl;
-                std::cout << "-r or --read [fileName.bmp] to read pictures from a file with the name \"fileName.bmp\""
-                          << std::endl;
-                std::cout << "-s or --save [fileName.bmp] to save pictures to a file with the name \"fileName.bmp\""
-                          << std::endl;
+                //help
                 break;
-            };
+            }
             case 'r': { //read
-                if(!isNameCorrect(optarg)) {
+                if (isNameCorrect(optarg)) {
+                    std::ifstream file(optarg, std::ifstream::binary);
+                    if (!file.is_open()) {
+                        error("Can't open input file");
+                        return 0;
+                    }
+                    bitmap.getBitmapFromFile(file);
+                    file.close();
+                    flag_input = true;
+                    break;
+                } else {
                     error("invalid argument in read.");
                     return 0;
                 }
-                std::ifstream file(optarg, std::ifstream::binary);
-                if (!file.is_open()) {
-                    error("Can't open input file");
-                    return 0;
-                }
-                bitmap.getBitmapFromFile(file);
-                file.close();
-                flag_input = true;
-                break;
-            };
+            }
             case 's': { //save
                 if(!flag_input) {
                     error("You did not enter a input file name");
@@ -201,14 +115,15 @@ int main(int argc, char *argv[]) {
                 }
                 if(!isNameCorrect(optarg)) {
                     error("invalid argument in save");
+                    bitmap.clearBitmap();
                     return 0;
                 }
                 std::ofstream result(optarg, std::ofstream::binary);
                 bitmap.saveBitmap(result);
                 result.close();
-                bitmap.clearBitmap();
+                flag_input = false;
                 break;
-            };
+            }
             case 'm': { //mirror
 
                 if(!flag_input) {
@@ -227,20 +142,23 @@ int main(int argc, char *argv[]) {
                         case 'a': { //OX | OY (axis)
                             if(used[0]) {
                                 error("too much argument in mirror, axis");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             axis = optarg;
                             if(axis != "OX" && axis != "ox" && axis != "oy" && axis != "OY") {
                                 error("invalid argument in mirror, axis");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             used[0] = true;
                             k--;
                             break;
-                        };
+                        }
                         case 'f': { // "start"
                             if(used[1]) {
                                 error("too much argument in mirror, start point");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             try {
@@ -249,15 +167,17 @@ int main(int argc, char *argv[]) {
                             }
                             catch (std::exception &e) {
                                 error("invalid argument in mirror, start point");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             k--;
                             used[1] = true;
                             break;
-                        };
+                        }
                         case 'u': { // "finish"
                             if(used[2]) {
                                 error("too much argument in mirror, finish point");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             try {
@@ -266,193 +186,207 @@ int main(int argc, char *argv[]) {
                             }
                             catch (std::exception &e) {
                                 error("invalid argument in mirror, finish point");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             k--;
                             used[2] = true;
                             break;
-                        };
+                        }
                         case '?':
                         default: {
                             error("invalid command in mirror");
+                            bitmap.clearBitmap();
                             return 0;
-                        };
-                    };
-                };
+                        }
+                    }
+                }
                 if(!checkOXY(start, finish, axis, bitmap)) {
                     error("invalid input in mirror");
+                    bitmap.clearBitmap();
                     return 0;
                 }
                 if(bitmap.mirror(start, finish, axis) != 0) {
                     error("invalid input in mirror");
+                    bitmap.clearBitmap();
                     return 0;
                 }
                 break;
-            };
+            }
             case 'd': { //draw_a_rectangle
 
-                if(!flag_input) {
+                if (flag_input) {
+                    int k = 5;
+                    std::vector<bool> used(5, false);
+                    Point start, finish;
+                    bool isFill = false;
+                    int width = 0;
+                    std::string colorLine, colorFill;
+                    while (k != 0 && (rez = getopt_long(argc, argv, short_options,
+                                                        long_options, &option_index)) != -1) {
+                        switch (rez) {
+                            case 'f': { // "start"
+                                if (used[0]) {
+                                    error("too much argument in rectangle, start point");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                try {
+                                    start.x = std::stoi(strtok(optarg, ",;"));
+                                    start.y = std::stoi(strtok(optarg, ",;"));
+                                }
+                                catch (std::exception &e) {
+                                    error("invalid argument in rectangle, start point");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                k--;
+                                used[0] = true;
+                                break;
+                            }
+                            case 'u': { // "finish"
+                                if (used[1]) {
+                                    error("too much argument in rectangle, finish point");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                try {
+                                    finish.x = std::stoi(strtok(optarg, ",;"));
+                                    finish.y = std::stoi(strtok(optarg, ",;"));
+                                }
+                                catch (std::exception &e) {
+                                    error("invalid argument in rectangle, finish point");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                k--;
+                                used[1] = true;
+                                break;
+
+                            }
+                            case 'c': { // "color_rectangle"
+                                if (used[2]) {
+                                    error("too much argument in rectangle, color rectangle");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                try {
+                                    colorLine = optarg;
+                                    if (colors.find(colorLine) == colors.end()) {
+                                        throw std::invalid_argument("colorLine");
+                                    }
+                                }
+                                catch (std::exception &e) {
+                                    error("invalid argument colorLine in  in rectangle, color rectangle");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                k--;
+                                used[2] = true;
+                                break;
+                            }
+                            case 'i': { // "is_fill"
+                                if (used[3]) {
+                                    error("too much argument in rectangle, is fill");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                try {
+                                    std::string str = optarg;
+                                    if (str == "yes" || str == "Yes" || str == "YES") {
+                                        isFill = true;
+                                        used[3] = true;
+                                        break;
+                                    } else if (str == "no" || str == "NO" || str == "No") {
+                                        k--;
+                                        used[3] = true;
+                                        break;
+                                    } else {
+                                        throw std::invalid_argument("");
+                                    }
+                                }
+                                catch (std::exception &e) {
+                                    error("invalid argument in rectangle, is fill");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                            }
+                            case 'l': { // "color_fill"
+                                if (!isFill) {
+                                    error("color fill with false is fill");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                if (used[4]) {
+                                    error("too much argument in rectangle, color fill");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                try {
+                                    colorFill = optarg;
+                                    if (colors.find(colorFill) == colors.end()) {
+                                        throw std::invalid_argument("color fill");
+                                    }
+                                }
+                                catch (std::exception &e) {
+                                    error("invalid argument in rectangle, color fill");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                k--;
+                                used[4] = true;
+                                break;
+                            }
+                            case 'g': { // "width_line"
+                                if (used[5]) {
+                                    error("too much argument in rectangle, line width");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                try {
+                                    width = std::stoi(optarg);
+                                }
+                                catch (std::exception &e) {
+                                    error("invalid argument in rectangle, line width");
+                                    bitmap.clearBitmap();
+                                    return 0;
+                                }
+                                k--;
+                                break;
+                            }
+                            case '?':
+                            default: {
+                                error("invalid option in rectangle");
+                                std::cout << optarg;
+                                bitmap.clearBitmap();
+                                return 0;
+                            }
+                        }
+                    }
+                    if (!checkXYW(start, finish, width, bitmap)) {
+                        error("invalid argument in rectangle");
+                        bitmap.clearBitmap();
+                        return 0;
+                    }
+                    bitmap.drawRectangle(start, finish, width, colors[colorLine]);
+                    if (isFill) bitmap.fillRectangle(start, finish, width, colors[colorFill]);
+                    break;
+                } else {
                     error("You did not enter a input file name");
                     return 0;
                 }
-
-                int k = 5;
-                std::vector<bool> used(5, false);
-                Bitmap:Point start, finish;
-                bool isFill = false;
-                int width = 0;
-                std::string colorLine, colorFill;
-                while (k != 0 && (rez = getopt_long(argc, argv, short_options,
-                                          long_options, &option_index)) != -1) {
-                    switch (rez) {
-                        case 'f': { // "start"
-                            if(used[0]) {
-                                error("too much argument in rectangle, start point");
-                                return 0;
-                            }
-                            try {
-                                start.x = std::stoi(strtok(optarg, ",;"));
-                                start.y = std::stoi(strtok(optarg, ",;"));
-                            }
-                            catch (std::exception &e) {
-                                error("invalid argument in rectangle, start point");
-                                return 0;
-                            }
-                            k--;
-                            used[0] = true;
-                            break;
-                        };
-                        case 'u': { // "finish"
-                            if(used[1]) {
-                                error("too much argument in rectangle, finish point");
-                                return 0;
-                            }
-                            try {
-                                finish.x = std::stoi(strtok(optarg, ",;"));
-                                finish.y = std::stoi(strtok(optarg, ",;"));
-                            }
-                            catch (std::exception &e) {
-                                error("invalid argument in rectangle, finish point");
-                                return 0;
-                            }
-                            k--;
-                            used[1] = true;
-                            break;
-
-                        };
-                        case 'c': { // "color_rectangle"
-                            if(used[2]) {
-                                error("too much argument in rectangle, color rectangle");
-                                return 0;
-                            }
-                            try {
-                                colorLine = optarg;
-                                if(colors.find(colorLine) == colors.end()) {
-                                    throw std::invalid_argument("colorLine");
-                                }
-                            }
-                            catch (std::exception &e) {
-                                error("invalid argument colorLine in  in rectangle, color rectangle");
-                                return 0;
-                            }
-                            k--;
-                            used[2] = true;
-                            break;
-                        };
-                        case 'i': { // "is_fill"
-                            if(used[3]) {
-                                error("too much argument in rectangle, is fill");
-                                return 0;
-                            }
-                            try {
-                                std::string str = optarg;
-                                if (str == "yes" || str == "Yes" || str == "YES") {
-                                    isFill = true;
-                                    used[3] = true;
-                                    break;
-                                } else if (str == "no" || str == "NO" || str == "No") {
-                                    k--;
-                                    used[3] = true;
-                                    break;
-                                } else {
-                                    throw std::invalid_argument("");
-                                }
-                            }
-                            catch(std::exception &e){
-                                error("invalid argument in rectangle, is fill");
-                                return 0;
-                            }
-                        };
-                        case 'l': { // "color_fill"
-                            if(!isFill) {
-                                error("color fill with false is fill");
-                                return 0;
-                            }
-                            if(used[4]) {
-                                error("too much argument in rectangle, color fill");
-                                return 0;
-                            }
-                            try {
-                                colorFill = optarg;
-                                if(colors.find(colorFill) == colors.end()) {
-                                    throw std::invalid_argument("color fill");
-                                }
-                            }
-                            catch (std::exception &e) {
-                                error("invalid argument in rectangle, color fill");
-                                return 0;
-                            }
-                            k--;
-                            used[4] = true;
-                            break;
-                        };
-                        case 'g': { // "width_line"
-                            if(used[5]) {
-                                error("too much argument in rectangle, line width");
-                                return 0;
-                            }
-                            try {
-                                width = std::stoi(optarg);
-                            }
-                            catch (std::exception &e) {
-                                error("invalid argument in rectangle, line width");
-                                return 0;
-                            }
-                            k--;
-                            break;
-                        };
-                        case '?':
-                        default: {
-                            error("invalid option in rectangle");
-                            std::cout << optarg;
-                            return 0;
-                        };
-                    };
-                };
-                if(!checkXYW(start, finish, width, bitmap)) {
-                    error("invalid argument in rectangle");
-                    return 0;
-                }
-                bitmap.drawRectangle(start, finish, width, colors[colorLine]);
-                if(isFill) bitmap.fillRectangle(start, finish, width, colors[colorFill]);
-                break;
-            };
-
-
-
+            }
             case 'p': { // "draw_pentagram"
-
                 if(!flag_input) {
                     error("You did not enter a input file name");
                     return 0;
                 }
-
                 int k = 4;
                 std::vector<bool> used(k, false);
                 int rad = 0;
                 int width = 0;
                 Point center;
-                Bitmap::Pixel color;
+                std::string color;
 
                 while (k != 0 && (rez = getopt_long(argc, argv, short_options,
                                           long_options, &option_index)) != -1) {
@@ -460,22 +394,25 @@ int main(int argc, char *argv[]) {
                         case 'g': { // "width_line"
                             if(used[0]) {
                                 error("too much argument in pentagram, line width");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             try {
                                 width = std::stoi(optarg);
                             }
                             catch (std::exception &e) {
-                                error("invalid argument");
+                                error("invalid argument in pentagram, line width");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             used[0] = true;
                             k--;
                             break;
-                        };
+                        }
                         case 'z': { // "center"
                             if(used[1]) {
                                 error("too much argument in pentagram, center point");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             try {
@@ -483,90 +420,124 @@ int main(int argc, char *argv[]) {
                                 center.y = std::stoi(strtok(optarg, ",;"));
                             }
                             catch (std::exception &e) {
-                                error("invalid argument");
+                                error("invalid argument in pentagram, center point");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             k--;
                             used[1] = true;
                             break;
-                        };
+                        }
                         case 't': { // "radius"
                             if(used[2]) {
                                 error("too much argument in pentagram, radius");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             try {
                                 rad = std::stoi(optarg);
                             }
                             catch (std::exception &e) {
-                                error("invalid argument");
+                                error("invalid argument in pentagram, radius");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             k--;
                             used[2] = true;
                             break;
-                        };
+                        }
                         case 'q': { // "color_pentagram"
                             if(used[3]) {
                                 error("too much argument in pentagram, color");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             try {
-                                color.r = std::stoi(strtok(optarg, ",;"));
-                                color.g = std::stoi(strtok(optarg, ",;"));
-                                color.b = std::stoi(strtok(optarg, ",;"));
+                                color = optarg;
+                                if(colors.find(color) == colors.end()) {
+                                    throw std::invalid_argument("");
+                                }
                             }
                             catch (std::exception &e) {
-                                error("invalid argument");
+                                error("invalid argument in pentagram, color");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             k--;
                             used[3] = true;
                             break;
-                        };
+                        }
                         case '?':
                         default: {
-                            printf("found unknown option\n");
-                            break;
-                        };
-                    };
-                };
-                bitmap.drawPentagram(center, rad, width, color);
+                            error("found unknown option in pentagram");
+                            bitmap.clearBitmap();
+                            return 0;
+                        }
+                    }
+                }
+                if(checkArg(center, rad, width, bitmap)) {
+                    error("invalid argument in pentagram");
+                    bitmap.clearBitmap();
+                    return 0;
+                }
+                bitmap.drawPentagram(center, rad, width, colors[color]);
                 break;
-            };
+            }
 
 
             case 'j': { // "make_collage"
-
                 if(!flag_input) {
-                    error("You did not enter a input file name");
+                    error("logic error");
                     return 0;
                 }
-
-                int k = 3;
+                flag_input = true;
+                int k = 2;
                 std::vector<bool> used(k, false);
                 int n = 0, m = 0;
-                std::vector<std::string> name;
-
+                std::vector<char*> names;
+                bool flagNM = false;
                 while (k != 0 && (rez = getopt_long(argc, argv, short_options,
                                           long_options, &option_index)) != -1) {
                     switch (rez) {
                         case 'b': { // "picture_list"
-                            if(used[3]) {
-                                error("too much argument in collage, pictures list");
+                            if(!flagNM) {
+                                error("You did not enter a input numbers");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
-                            /*while() {
-                                name.emplace_back(strtok(optarg, ",;"));
-                            }*/
+                            if(used[1]) {
+                                error("too much argument in collage, pictures list");
+                                bitmap.clearBitmap();
+                                return 0;
+                            }
+                            try {
+                                int count = 0;
+                                char *name = strtok(optarg, ",;");
+                                while (count != n * m && name != nullptr) {
+                                    if(!isNameCorrect(name)) {
+                                        error("invalid name in name lost for collage");
+                                        bitmap.clearBitmap();
+                                        return 0;
+                                    }
+                                    names.push_back(name);
+                                    name = strtok(nullptr, ",;");
+                                    count++;
+                                }
+                            }
+                            catch(std::exception &e){
+                                error("invalid argument in make collage in list");
+                                bitmap.clearBitmap();
+                                return 0;
+                            }
                             k--;
-                            used[3] = true;
+                            used[1] = true;
                             break;
-                        };
+                        }
 
                         case 'k': { // "n, m"
-                            if(used[3]) {
+                            if(used[0]) {
                                 error("too much argument in collage, numbers");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
                             try {
@@ -574,34 +545,64 @@ int main(int argc, char *argv[]) {
                                 m = std::stoi(strtok(optarg, ",;"));
                             }
                             catch (std::exception &e) {
-                                error("invalid argument");
+                                error("invalid argument in collage, numbers");
+                                bitmap.clearBitmap();
                                 return 0;
                             }
+                            flagNM = true;
                             k--;
-                            used[3] = true;
+                            used[0] = true;
                             break;
-                        };
+                        }
                         case '?':
                         default: {
-                            printf("found unknown option\n");
-                            break;
-                        };
-                    };
-                };
-                std::cout << "\ncollage\n";
+                            error("found unknown option in collage");
+                            bitmap.clearBitmap();
+                            return 0;
+                        }
+                    }
+                }
+                std::vector<Bitmap> images;
+                try {
+                    for (int i = 0; i < n * m; i++) {
+                        std::ifstream file(names[i], std::ifstream::binary);
+                        if (!file.is_open()) {
+                            std::cout << "names " << names[i] << std::endl;
+                            throw std::invalid_argument("Can't open input file");
+                        }
+                        Bitmap image(file);
+                        images.emplace_back(image);
+                        file.close();
+                    }
+                }
+                catch(std::exception &e) {
+                    error("make_collage error");
+                    bitmap.clearBitmap();
+                    return 0;
+                }
+                bitmap.makeCollage(images, n, m);
+                for(int i = 0; i < n*m; i++) {
+                    images[i].clearBitmap();
+                }
                 break;
-            };
-            case '?':
+            }
+            case '?': {
+                error("found unknown option");
+                bitmap.clearBitmap();
+                return 0;
+            }
             default: {
-                printf("found unknown option\n");
-                break;
-            };
-        };
-    };
+                error("found unknown option");
+                bitmap.clearBitmap();
+                return 0;
+            }
+        }
+    }
+    bitmap.clearBitmap();
     return 0;
 }
 
-void error(std::string str) {
+void error(const std::string& str) {
     std::cout << str << std::endl;
 }
 

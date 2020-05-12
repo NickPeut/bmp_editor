@@ -119,11 +119,11 @@ void Bitmap::drawPentagram(Point center, int radius, int w, Pixel color) {
     fillCircle(circle, color);
 
     for (double i = 0; i < w; i++) {
-        drawStar(center, radius - i + 1, w, color);
+        drawStar(center, radius - i + 1, color);
     }
 }
 
-void Bitmap::drawStar(const Point &center, int radius, int w, Bitmap::Pixel color) {
+void Bitmap::drawStar(const Point &center, int radius, Bitmap::Pixel color) {
     Point vector(0, -radius);
     const Point base(0, -radius);
     const int STAR_ANGLE = 72;
@@ -201,7 +201,7 @@ void Bitmap::makeCollage(std::vector<Bitmap> &images, const int &n, const int &m
 }
 
 
-Point::Point() {}
+Point::Point() = default;
 
 Point::Point(int x, int y) : x(x), y(y) {}
 
@@ -214,11 +214,10 @@ Point &Point::operator += (const Point &other) {
     return *this;
 }
 
-Point &Point::rotate(double angle) {
+void Point::rotate(double angle) {
     auto save_x = x;
     auto save_y = y;
     x = save_x * cos(angle) - save_y * sin(angle);
     y = save_x * sin(angle) + save_y * cos(angle);
-    //TODO
 }
 
