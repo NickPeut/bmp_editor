@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
                               long_options, &option_index)) != -1) {
         switch (rez) {
             case 'h': { //help
-                std::ifstream in("../input.txt");
+                std::ifstream in("../help.txt");
                 std::string help;
                 if (in.is_open()) {
                     while (getline(in, help)) {
