@@ -89,7 +89,13 @@ int main(int argc, char *argv[]) {
                               long_options, &option_index)) != -1) {
         switch (rez) {
             case 'h': { //help
-                //help
+                std::ifstream in("../input.txt");
+                std::string help;
+                if (in.is_open()) {
+                    while (getline(in, help)) {
+                        std::cout << help << std::endl;
+                    }
+                }
                 break;
             }
             case 'r': { //read
@@ -598,7 +604,8 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    bitmap.clearBitmap();
+    if(flag_input)
+        bitmap.clearBitmap();
     return 0;
 }
 
