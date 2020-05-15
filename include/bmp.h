@@ -55,15 +55,15 @@ public:
     Header header;
     BitmapData data;
     Pixel** picture;
+    bool isPicture;
 
+    virtual ~Bitmap();
 
     explicit Bitmap();
 
     explicit Bitmap(std::ifstream &file);
 
     void saveBitmap(std::ofstream &file);
-
-    void clearBitmap();
 
     int mirror(Point &point1, Point &point2, std::string &oxy);
 
@@ -75,7 +75,7 @@ public:
 
     void makeCollage(std::vector<Bitmap> &images, const int &n, const int &m);
 
-    void getBitmapFromFile(std::ifstream &file);
+    bool getBitmapFromFile(std::ifstream &file);
 
 private:
 

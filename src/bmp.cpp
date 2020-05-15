@@ -1,5 +1,5 @@
-#include <fstream>
 #include "bmp.h"
+#include "menu.h"
 
 size_t Bitmap::normalizeTo4(size_t x) {
     return (x + 3) / 4 * 4;
@@ -11,16 +11,12 @@ int Bitmap:: scanHeader(std::ifstream &file) {
             return 0;
         }
         else
-            throw std::logic_error("not supported file format");
+            throw std::logic_error("not support file format");
     }
     catch (std::logic_error* err) {
         std::cout << err;
         return 1;
     }
-
-    file.read((char *) (&header), sizeof(header));
-    file.read((char *) (&data), sizeof(data));
-    return 0;
 }
 
 void Bitmap::scanSize() {
@@ -50,9 +46,10 @@ int Bitmap:: initPixelArray() {
         }
     }
     catch (int err) {
-        std::cout << "Error " << err << " ";
+        std::cout << "Error in PixelArray";
         return err;
     }
+    isPicture = true;
     return 0;
 }
 
@@ -87,11 +84,6 @@ void Bitmap:: saveBitmap(std::ofstream &file) {
     printPicture(file);
 }
 
-void Bitmap:: clearBitmap() {
-    free(picture[0]);
-    free(picture);
-}
-
 int Bitmap:: readBitmap(std::ifstream &file) {
     if (scanHeader(file) != 0) {
         return 1;
@@ -104,17 +96,22 @@ int Bitmap:: readBitmap(std::ifstream &file) {
     return 0;
 }
 
-void Bitmap:: getBitmapFromFile(std::ifstream &file) {
+bool Bitmap::getBitmapFromFile(std::ifstream &file) {
         if (readBitmap(file) != 0) {
-            throw std::logic_error("Memory allocation failed");
+            error("Memory allocation failed");
+            return false;
         }
+        return true;
 }
 
 Bitmap::Bitmap(std::ifstream &file) {
     getBitmapFromFile(file);
+    isPicture = true;
 }
 
-Bitmap::Bitmap() {}
+Bitmap::Bitmap() {
+    isPicture = false;
+}
 
 bool Bitmap::isCorrect(std::ifstream &file) {
     file.read((char*)(&header), sizeof(header));
@@ -128,3 +125,11 @@ bool Bitmap::isCorrect(std::ifstream &file) {
 Bitmap::Pixel::Pixel(int red, int green, int blue) : b(blue), g(green), r(red) {}
 
 Bitmap::Pixel::Pixel() {}
+
+Bitmap::~Bitmap() {
+    if(isPicture) {
+        free(picture[0]);
+        free(picture);
+        isPicture = false;
+    }
+}

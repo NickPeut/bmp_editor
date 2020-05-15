@@ -89,6 +89,9 @@
 		<Unit filename="/home/nuka/CLionProjects/CourseCpp/include/bmp.h">
 			<Option target="CourseCpp"/>
 		</Unit>
+		<Unit filename="/home/nuka/CLionProjects/CourseCpp/include/menu.h">
+			<Option target="CourseCpp"/>
+		</Unit>
 		<Unit filename="/home/nuka/CLionProjects/CourseCpp/include/processings_bmp.h">
 			<Option target="CourseCpp"/>
 		</Unit>
@@ -96,6 +99,9 @@
 			<Option target="CourseCpp"/>
 		</Unit>
 		<Unit filename="/home/nuka/CLionProjects/CourseCpp/src/main.cpp">
+			<Option target="CourseCpp"/>
+		</Unit>
+		<Unit filename="/home/nuka/CLionProjects/CourseCpp/src/menu.cpp">
 			<Option target="CourseCpp"/>
 		</Unit>
 		<Unit filename="/home/nuka/CLionProjects/CourseCpp/src/processings_bmp.cpp">

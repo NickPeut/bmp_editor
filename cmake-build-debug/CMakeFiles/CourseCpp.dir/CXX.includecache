@@ -20,19 +20,19 @@ fstream
 processings_bmp.h
 ../include/processings_bmp.h
 
+../include/menu.h
+bmp.h
+../include/bmp.h
+
 ../include/processings_bmp.h
 fstream
 -
 map
 -
 
-/home/nuka/CLionProjects/CourseCpp/src/main.cpp
-regex.h
--
-getopt.h
--
+/home/nuka/CLionProjects/CourseCpp/src/bmp.cpp
 bmp.h
 /home/nuka/CLionProjects/CourseCpp/src/bmp.h
-processings_bmp.h
-/home/nuka/CLionProjects/CourseCpp/src/processings_bmp.h
+menu.h
+/home/nuka/CLionProjects/CourseCpp/src/menu.h
 

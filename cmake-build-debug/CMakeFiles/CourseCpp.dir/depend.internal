@@ -3,12 +3,19 @@
 
 CMakeFiles/CourseCpp.dir/src/bmp.cpp.o
  ../include/bmp.h
+ ../include/menu.h
  ../include/processings_bmp.h
  /home/nuka/CLionProjects/CourseCpp/src/bmp.cpp
 CMakeFiles/CourseCpp.dir/src/main.cpp.o
  ../include/bmp.h
+ ../include/menu.h
  ../include/processings_bmp.h
  /home/nuka/CLionProjects/CourseCpp/src/main.cpp
+CMakeFiles/CourseCpp.dir/src/menu.cpp.o
+ ../include/bmp.h
+ ../include/menu.h
+ ../include/processings_bmp.h
+ /home/nuka/CLionProjects/CourseCpp/src/menu.cpp
 CMakeFiles/CourseCpp.dir/src/processings_bmp.cpp.o
  ../include/bmp.h
  ../include/processings_bmp.h
