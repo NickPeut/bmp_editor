@@ -30,9 +30,9 @@ fstream
 map
 -
 
-/home/nuka/CLionProjects/CourseCpp/src/bmp.cpp
-bmp.h
-/home/nuka/CLionProjects/CourseCpp/src/bmp.h
+/home/nuka/CLionProjects/CourseCpp/src/menu.cpp
+regex.h
+-
 menu.h
 /home/nuka/CLionProjects/CourseCpp/src/menu.h
 

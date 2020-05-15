@@ -133,3 +133,6 @@ Bitmap::~Bitmap() {
         isPicture = false;
     }
 }
+
+Bitmap &Bitmap::operator = (const Bitmap &other) = default;
+

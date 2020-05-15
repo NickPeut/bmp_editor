@@ -32,7 +32,7 @@ bool readBMP(char *optarg, Bitmap &bitmap) {
 
 
 void printInfo(Bitmap &bitmap) {
-    std::cout << "type = BMP";
+    std::cout << "type = BMP" << std::endl;
     std::cout << "width = " << bitmap.width << std::endl;
     std::cout << "height = " << bitmap.height << std::endl;
 }

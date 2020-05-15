@@ -8,11 +8,15 @@ struct Point {
     Point(int x, int y);
     Point();
 
+    virtual ~Point();
+
     friend Point operator +(const Point& first, const Point& second);
 
     void rotate(double angle);
 
     Point& operator += (const Point &other);
+
+    Point& operator = (const Point &other);
 
     int x;
     int y;

@@ -201,11 +201,12 @@ void Bitmap::makeCollage(std::vector<Bitmap> &images, const int &n, const int &m
 }
 
 
+
 Point::Point() = default;
 
 Point::Point(int x, int y) : x(x), y(y) {}
 
-Point operator+(const Point &first, const Point &second) {
+Point operator + (const Point &first, const Point &second) {
     return {first.x + second.x, first.y + second.y};
 }
 
@@ -221,3 +222,10 @@ void Point::rotate(double angle) {
     y = save_x * sin(angle) + save_y * cos(angle);
 }
 
+Point &Point::operator = (const Point &other) {
+    x = other.x;
+    y = other.y;
+    return *this;
+}
+
+Point::~Point() = default;

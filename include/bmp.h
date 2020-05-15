@@ -61,6 +61,8 @@ public:
 
     explicit Bitmap();
 
+    Bitmap& operator = (const Bitmap &other);
+
     explicit Bitmap(std::ifstream &file);
 
     void saveBitmap(std::ofstream &file);

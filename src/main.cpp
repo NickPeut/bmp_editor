@@ -6,7 +6,7 @@
 
 
 int main(int argc, char *argv[]) {
-    const char *short_options = "hr:ma:df:u:c:i:l:g:pz:q:jk:b:s:";
+    const char *short_options = "hr:ma:df:u:c:o:l:g:pz:q:jk:b:s:i";
 
     const struct option long_options[] = {
             {"help",            no_argument,       nullptr, 'h'},
@@ -33,7 +33,9 @@ int main(int argc, char *argv[]) {
             {"nums",            required_argument, nullptr, 'k'},
             {"picture_list",    required_argument, nullptr, 'b'},
 
-            {"save",            required_argument, nullptr, 's'} //5
+            {"save",            required_argument, nullptr, 's'}, //5
+
+            {"info",            no_argument,       nullptr, 'i'} //6
     };
 
     Bitmap bitmap;
@@ -83,7 +85,6 @@ int main(int argc, char *argv[]) {
                     std::ofstream result(optarg, std::ofstream::binary);
                     bitmap.saveBitmap(result);
                     result.close();
-                    flag_input = false;
                     break;
                 }
                 case 'm': { //mirror
@@ -484,15 +485,14 @@ int main(int argc, char *argv[]) {
                         }
                     }
 
-                    std::vector<Bitmap> images;
+                    std::vector<Bitmap> images(n*m);
                     try {
                         for (int i = 0; i < n * m; i++) {
-                            Bitmap image;
-                            if(readBMP(names[i], image)) {
+                            if(readBMP(names[i], images[i])) {
                                 std:: cout << names[i];
                                 return 0;
                             }
-                            images.emplace_back(image);
+                            images[i].isPicture = true;
                         }
                     }
                     catch(std::exception &e) {
