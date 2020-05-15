@@ -158,7 +158,7 @@ int main(int argc, char *argv[]) {
                         }
                     }
                     if (!checkOXY(start, finish, axis, bitmap)) {
-                        error("invalid input in mirror");
+                        error("invalid arguments in mirror");
                         return 0;
                     }
                     if (bitmap.mirror(start, finish, axis) != 0) {

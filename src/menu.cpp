@@ -49,16 +49,16 @@ bool isNameCorrect(char *name) {
     return ans;
 }
 
-bool checkPoint(Point a, Bitmap bitmap) {
+bool checkPoint(Point a, Bitmap &bitmap) {
     return a.x > 0 && a.x < bitmap.width && a.y > 0 && a.y < bitmap.height;
 }
 
 bool checkOXY(Point point1, Point point2, std::string &oxy, Bitmap &bitmap) {
-    return (oxy == "OX" || oxy == "OY") && checkPoint(point1, bitmap) && checkPoint(point2, bitmap)
+    return (oxy == "OX" || oxy == "OY" || oxy == "ox" || oxy == "oy") && checkPoint(point1, bitmap) && checkPoint(point2, bitmap)
            && point1.x <= point2.x && point1.y <= point2.y;
 }
 
-bool checkArg(Point s, int rad, int width, Bitmap bitmap) {
+bool checkArg(Point s, int rad, int width, Bitmap &bitmap) {
     return !(checkPoint(s, bitmap)) &&
            !checkPoint({s.x + rad + width, s.y + rad + width}, bitmap) &&
            !checkPoint({s.x - rad - width, s.y - rad - width}, bitmap) &&

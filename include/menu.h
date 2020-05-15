@@ -24,13 +24,13 @@ void error(const std::string &str);
 
 bool checkXYW(Point s, Point f, int width, Bitmap &bitmap);
 
-bool checkArg(Point s, int rad, int width, Bitmap bitmap);
+bool checkArg(Point s, int rad, int width, Bitmap &bitmap);
 
 bool readBMP(char *optarg, Bitmap &bitmap);
 
 bool isNameCorrect(char *name);
 
-bool checkPoint(Point a, Bitmap bitmap);
+bool checkPoint(Point a, Bitmap &bitmap);
 
 bool checkOXY(Point point1, Point point2, std::string &oxy, Bitmap &bitmap);
 

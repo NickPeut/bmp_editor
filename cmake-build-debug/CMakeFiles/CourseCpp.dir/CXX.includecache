@@ -30,6 +30,22 @@ fstream
 map
 -
 
+/home/nuka/CLionProjects/CourseCpp/src/bmp.cpp
+bmp.h
+/home/nuka/CLionProjects/CourseCpp/src/bmp.h
+menu.h
+/home/nuka/CLionProjects/CourseCpp/src/menu.h
+
+/home/nuka/CLionProjects/CourseCpp/src/main.cpp
+getopt.h
+-
+bmp.h
+/home/nuka/CLionProjects/CourseCpp/src/bmp.h
+menu.h
+/home/nuka/CLionProjects/CourseCpp/src/menu.h
+processings_bmp.h
+/home/nuka/CLionProjects/CourseCpp/src/processings_bmp.h
+
 /home/nuka/CLionProjects/CourseCpp/src/menu.cpp
 regex.h
 -
