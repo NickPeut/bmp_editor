@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    const char *short_options = "hr:ma:df:u:c:o:l:g:pz:q:jk:b:s:i";
+    const char *short_options = ":hr:ma:df:u:c:o:l:g:pz:q:jk:b:s:i";
 
     const struct option long_options[] = {
             {"help",            no_argument,       nullptr, 'h'},
@@ -40,7 +40,8 @@ int main(int argc, char *argv[]) {
 
             {"save",            required_argument, nullptr, 's'}, //5
 
-            {"info",            no_argument,       nullptr, 'i'} //6
+            {"info",            no_argument,       nullptr, 'i'}, //6
+            {0,            0,       nullptr, 0}
     };
 
     Bitmap bitmap;
@@ -519,6 +520,10 @@ int main(int argc, char *argv[]) {
                     break;
                 }
                 case '?': {
+                    error("found unknown option");
+                    return 0;
+                }
+                case ':': {
                     error("found unknown option");
                     return 0;
                 }
