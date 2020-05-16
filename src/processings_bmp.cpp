@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "processings_bmp.h"
 #include "bmp.h"
+
 int Bitmap::mirror(Point &point1, Point &point2, std::string &oxy) {
     if (oxy == "OY" || oxy == "ox") {
         for (int x = 0; x <= (point2.x - point1.x) / 2; x++) {

@@ -133,14 +133,4 @@ Bitmap::~Bitmap() {
     }
 }
 
-Bitmap &Bitmap::operator = (const Bitmap &other) {
-    height = other.height;
-    width = other.width;
-    widthBytes = other.widthBytes;
-    memcpy(&data, &other.data, sizeof(data));
-    memcpy(&header, &other.header, sizeof(header));
-    memcpy(&header, &other.header, sizeof(header));
-    picture = other.picture;
-isPicture = other.isPicture;
-return *this;
-}
+Bitmap &Bitmap::operator = (const Bitmap &other) =  default;

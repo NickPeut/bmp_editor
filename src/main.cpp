@@ -4,8 +4,13 @@
 #include "processings_bmp.h"
 
 
-
 int main(int argc, char *argv[]) {
+
+    if (argc == 1) {
+        printHelp();
+        return 0;
+    }
+
     const char *short_options = "hr:ma:df:u:c:o:l:g:pz:q:jk:b:s:i";
 
     const struct option long_options[] = {
@@ -40,10 +45,11 @@ int main(int argc, char *argv[]) {
 
     Bitmap bitmap;
     bool flag_input = false;
+    opterr = 0;
+    int rez = 0;
+    int option_index = 0;
 
-    int rez;
-    int option_index;
-    try {
+
         while ((rez = getopt_long(argc, argv, short_options,
                                   long_options, &option_index)) != -1) {
             switch (rez) {
@@ -52,7 +58,7 @@ int main(int argc, char *argv[]) {
                     break;
                 }
                 case 'i': { //Info
-                    if(flag_input)
+                    if (flag_input)
                         printInfo(bitmap);
                     else {
                         error("logic error");
@@ -122,8 +128,8 @@ int main(int argc, char *argv[]) {
                                     return 0;
                                 }
                                 try {
-                                    start.x = std::stoi(strtok(optarg, ",;"));
-                                    start.y = std::stoi(strtok(optarg, ",;"));
+                                    start.x = std::stoi(strtok(optarg, ","));
+                                    start.y = std::stoi(strtok(nullptr, ","));
                                 }
                                 catch (std::exception &e) {
                                     error("invalid argument in mirror, start point");
@@ -139,8 +145,8 @@ int main(int argc, char *argv[]) {
                                     return 0;
                                 }
                                 try {
-                                    finish.x = std::stoi(strtok(optarg, ",;"));
-                                    finish.y = std::stoi(strtok(optarg, ",;"));
+                                    finish.x = std::stoi(strtok(optarg, ","));
+                                    finish.y = std::stoi(strtok(nullptr, ","));
                                 }
                                 catch (std::exception &e) {
                                     error("invalid argument in mirror, finish point");
@@ -150,7 +156,10 @@ int main(int argc, char *argv[]) {
                                 used[2] = true;
                                 break;
                             }
-                            case '?':
+                            case '?':{
+                                error("invalid command in mirror");
+                                return 0;
+                            }
                             default: {
                                 error("invalid command in mirror");
                                 return 0;
@@ -185,8 +194,8 @@ int main(int argc, char *argv[]) {
                                         return 0;
                                     }
                                     try {
-                                        start.x = std::stoi(strtok(optarg, ",;"));
-                                        start.y = std::stoi(strtok(optarg, ",;"));
+                                        start.x = std::stoi(strtok(optarg, ","));
+                                        start.y = std::stoi(strtok(nullptr, ","));
                                     }
                                     catch (std::exception &e) {
                                         error("invalid argument in rectangle, start point");
@@ -202,8 +211,8 @@ int main(int argc, char *argv[]) {
                                         return 0;
                                     }
                                     try {
-                                        finish.x = std::stoi(strtok(optarg, ",;"));
-                                        finish.y = std::stoi(strtok(optarg, ",;"));
+                                        finish.x = std::stoi(strtok(optarg, ","));
+                                        finish.y = std::stoi(strtok(nullptr, ","));
                                     }
                                     catch (std::exception &e) {
                                         error("invalid argument in rectangle, finish point");
@@ -295,7 +304,11 @@ int main(int argc, char *argv[]) {
                                     k--;
                                     break;
                                 }
-                                case '?':
+                                case '?': {
+                                    error("invalid option in rectangle");
+                                    std::cout << optarg;
+                                    return 0;
+                                }
                                 default: {
                                     error("invalid option in rectangle");
                                     std::cout << optarg;
@@ -353,8 +366,8 @@ int main(int argc, char *argv[]) {
                                     return 0;
                                 }
                                 try {
-                                    center.x = std::stoi(strtok(optarg, ",;"));
-                                    center.y = std::stoi(strtok(optarg, ",;"));
+                                    center.x = std::stoi(strtok(optarg, ","));
+                                    center.y = std::stoi(strtok(nullptr, ","));
                                 }
                                 catch (std::exception &e) {
                                     error("invalid argument in pentagram, center point");
@@ -399,14 +412,17 @@ int main(int argc, char *argv[]) {
                                 used[3] = true;
                                 break;
                             }
-                            case '?':
+                            case '?': {
+                                error("found unknown option in pentagram");
+                                return 0;
+                            }
                             default: {
                                 error("found unknown option in pentagram");
                                 return 0;
                             }
                         }
                     }
-                    if (checkArg(center, rad, width, bitmap)) {
+                    if (!checkArg(center, rad, width, bitmap)) {
                         error("invalid argument in pentagram");
                         return 0;
                     }
@@ -462,8 +478,8 @@ int main(int argc, char *argv[]) {
                                     return 0;
                                 }
                                 try {
-                                    n = std::stoi(strtok(optarg, ",;"));
-                                    m = std::stoi(strtok(optarg, ",;"));
+                                    n = std::stoi(strtok(optarg, ","));
+                                    m = std::stoi(strtok(nullptr, ","));
                                 }
                                 catch (std::exception &e) {
                                     error("invalid argument in collage, numbers");
@@ -474,7 +490,7 @@ int main(int argc, char *argv[]) {
                                 used[0] = true;
                                 break;
                             }
-                            case '?':{
+                            case '?': {
                                 error("found unknown option");
                                 return 0;
                             }
@@ -485,17 +501,17 @@ int main(int argc, char *argv[]) {
                         }
                     }
 
-                    std::vector<Bitmap> images(n*m);
+                    std::vector<Bitmap> images(n * m);
                     try {
                         for (int i = 0; i < n * m; i++) {
-                            if(readBMP(names[i], images[i])) {
-                                std:: cout << names[i];
+                            if (readBMP(names[i], images[i])) {
+                                std::cout << names[i];
                                 return 0;
                             }
                             images[i].isPicture = true;
                         }
                     }
-                    catch(std::exception &e) {
+                    catch (std::exception &e) {
                         error("make_collage error");
                         return 0;
                     }
@@ -510,11 +526,7 @@ int main(int argc, char *argv[]) {
                     error("found unknown option");
                     return 0;
                 }
-                }
             }
         }
-    catch(std::logic_error &e){
-        error("logic error in arguments");
-    }
     return 0;
 }
